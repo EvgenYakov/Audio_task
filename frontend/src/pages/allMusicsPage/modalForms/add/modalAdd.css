@@ -1,0 +1,5 @@
+
+.addPlst {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,27 @@
+.nav-route {
+    margin: 0 5px;
+}
+
+.nav-route a {
+    display: inline-block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: white;
+}
+
+.nav-route:hover {
+    background-color: white;
+    border-radius: 5px;
+}
+
+.nav-route:hover a {
+    color: rgba(8,8,8);
+}
+
+.nav-route.active {
+    background-color: white;
+    border-radius: 5px;
+}
+.nav-route.active a {
+    color: rgba(8,8,8);
+}

@@ -1,0 +1,25 @@
+.playFoot{
+    background-color: rgba(0, 0, 0, 0.99);
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+    font-size: 19px;
+    font-weight: bold;
+    color: #fafaff;
+    padding-bottom: 10px;
+}
+
+input[type=range] {
+    height: 10px;
+    -webkit-appearance: none;
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    background: #3b7677;
+    transition: background 0.2s ease;
+    cursor: pointer;
+
+}
+

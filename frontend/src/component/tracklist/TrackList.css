@@ -1,0 +1,56 @@
+
+
+.track {
+    background: rgba(0, 0, 0, 0.40);
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 3px;
+    border-radius: 2px;
+}
+
+.small-img {
+    object-fit: cover;
+    border-radius: 120px;
+    width: 60px;
+    height: 60px;
+    margin-right: 5px;
+}
+
+.info {
+    display: flex;
+    flex-direction: row;
+}
+
+.trackControls .play svg,
+.trackControls .page svg,
+.trackControls .delete svg,
+.trackControls .heartOff svg,
+.trackControls .AddPlst svg,
+.trackControls .Cross svg,
+.trackControls .pencil svg
+{
+    height: 30px;
+    width: 30px;
+}
+
+.trackControls .heartOn svg
+{
+    height: 30px;
+    width: 30px;
+}
+
+.trackControls path {
+    fill: white;
+}
+
+
+.trackControls button{
+    background-color: rgba(0, 0, 0, 0.0);
+}
+
+.trackControls button:hover {
+    background-color: rgba(0, 0, 0, 0.40);
+}
+

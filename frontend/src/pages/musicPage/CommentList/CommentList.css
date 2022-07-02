@@ -1,0 +1,6 @@
+.comm{
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.40);
+    margin:5px;
+    border-radius: 5px;
+}

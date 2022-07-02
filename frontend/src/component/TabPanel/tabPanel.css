@@ -1,0 +1,15 @@
+.nav-tabs{
+    display: flex;
+    align-items: center;
+    width: 330px;
+    margin: auto;
+}
+
+.nav-link {
+    color:white;
+}
+
+
+.nav-link:hover {
+    color:white;
+}
