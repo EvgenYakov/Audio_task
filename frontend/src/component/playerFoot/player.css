@@ -20,6 +20,5 @@ input[type=range] {
     background: #3b7677;
     transition: background 0.2s ease;
     cursor: pointer;
-
 }
 

@@ -14,6 +14,7 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack}){
     const [trIn, setTrIn] = useState(0);
     const {fileId}= tracks[trIn];
     const [complete,setComplete] = useState(false);
+    const [volume,setVolume] = useState(1)
 
     const isReady = useRef(false);
     const intervalRef = useRef();
@@ -71,6 +72,10 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack}){
              audioRef.current.pause();
          }
      }, [trPlaying])
+
+    useEffect(()=>{
+        audioRef.current.volume=volume
+    },[volume])
 
     useEffect(() => {
         audioRef.current.src = '/music/stream/'+fileId
@@ -134,29 +139,39 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack}){
                 onKeyUp={onScrubEnd}
                 style={{ background: trackStyle }}
             />
-            <div style={{display: "flex", flexDirection: "row"}}>
-                <Controls
-                    isPlay={trPlaying}
-                    toNextTrack={toNextTrack}
-                    toPrevTrack={toPrevTrack}
-                    setPlay={setTrPlaying}
-                />
-                <img className="small-img" src={tracks[trIn].url}/>
-                <div style={{margin:"0 20px"}}>
-                    <p className="m-0">
-                        {tracks[trIn].label}
-                    </p>
-                    <p className="m-0 fw-light">
-                        {tracks[trIn].author}
-                    </p>
+            <div style={{display: "flex", flexDirection: "row", justifyContent:"space-between", alignItems:"center"}}>
+                <div style={{display: "flex", flexDirection: "row"}}>
+                    <Controls
+                        isPlay={trPlaying}
+                        toNextTrack={toNextTrack}
+                        toPrevTrack={toPrevTrack}
+                        setPlay={setTrPlaying}
+                    />
+                    <img className="small-img" src={tracks[trIn].url}/>
+                    <div style={{margin:"0 20px"}}>
+                        <p className="m-0">
+                            {tracks[trIn].label}
+                        </p>
+                        <p className="m-0 fw-light">
+                            {tracks[trIn].author}
+                        </p>
+                    </div>
+                    {
+                        ! complete ?
+                            <div className="spinner-border text-light d-flex align-self-center" role="status">
+                                <span className="visually-hidden">Загрузка...</span>
+                            </div>:
+                            <></>
+                    }
                 </div>
-                {
-                     ! complete ?
-                             <div className="spinner-border text-light d-flex align-self-center" role="status">
-                                 <span className="visually-hidden">Загрузка...</span>
-                             </div>:
-                         <></>
-                }
+                <input
+                    type='range'
+                    step='1'
+                    max='10'
+                    value={volume*10}
+                    onChange={(e)=>setVolume(e.target.value*0.1)}
+                    style={{width:"100px",margin:"20px", backgroundColor:"white"}}
+                />
             </div>
         </div>
 

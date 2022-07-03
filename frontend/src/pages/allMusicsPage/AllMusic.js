@@ -138,7 +138,7 @@ const initialPlaylists = [
         <div className="AllMusic">
             <div className="mBody">
                <h1>
-                   Список треков
+                   Музыка
                </h1>
                     <Playlist playlists={playlists} setModalActive={setModalActive} onPlaylist={onPlaylist}/>
                 {/*Сделать компонент */}

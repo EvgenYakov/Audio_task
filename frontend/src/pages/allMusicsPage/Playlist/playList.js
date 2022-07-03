@@ -12,11 +12,18 @@ export default function PlayList(props){
            {
                playlists.map((plst,index)=>{
                    return(
-                   <div className="col" key={index} onClick={()=>props.onPlaylist(plst.tracks)}>
+                   <div className="col" key={index} >
                            <div className="card bg-dark bg-opacity-50 ">
-                               {plst.url==="" ? <EmptyImg className="card-img-top opacity-50"/> : <img src={plst.url} className="plstImg" alt="..."/>}
-                               <div className="card-body">
-                                   <h5 className="card-title">{plst.label}</h5>
+                               <div onClick={()=>props.onPlaylist(plst.tracks)}>
+                                   {plst.url==="" ? <EmptyImg className="card-img-top"/> : <img src={plst.url} className="plstImg" alt="..."/>}
+                               </div>
+                               <div className="changTitle card-body ">
+                                   <div className="change  text-center" style={{width:"100%"}}>
+                                       <h5 className=" card-title ">{plst.label}</h5>
+                                   </div>
+                                   <button className="changBtn btn-primary btn-lg m-0 w-100 ">
+                                       Изменить
+                                   </button>
                                </div>
                            </div>
                    </div>
