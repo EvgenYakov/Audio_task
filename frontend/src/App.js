@@ -5,7 +5,6 @@ import LinkHeader from "./component/header/header";
 import {Route,Routes} from "react-router-dom";
 import Add from "./pages/Add/Add";
 import Home from "./pages/HomePage/home";
-import Playlists from "./pages/PLalists/playlist";
 import Users from "./pages/users/users"
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
@@ -20,7 +19,6 @@ function App() {
               <Route path="/" element={<Home/>}/>
               <Route path="/auth" element={<Auth/>}/>
               <Route path="/add" element={<Add/>}/>
-              <Route path="/playlist" element={<Playlists/>}/>
               <Route path="/music" element={<AllMusic/>}/>
               <Route path="/users" element={<Users/>}/>
                 <Route path="/music/:id" element={<MusicPage/>}/>

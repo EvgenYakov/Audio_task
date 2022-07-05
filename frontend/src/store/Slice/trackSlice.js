@@ -29,7 +29,7 @@ export const addTrack = createAsyncThunk(
 
 export const getTracks = createAsyncThunk(
     'music/get',
-    async (trackData, thunkAPI)=>{
+    async (_,thunkAPI)=>{
         try{
             const token = thunkAPI.getState().auth.user.token;
             return await trackService.getTracks(token)
@@ -112,7 +112,6 @@ export const trackSlice = createSlice({
             state.isLoading = false
             state.isSuccess = true
             state.tracks = action.payload
-            console.log(state.tracks)
         })
             .addCase(getTracks.rejected,(state,action)=>{
             state.isLoading = false
@@ -143,8 +142,6 @@ export const trackSlice = createSlice({
             state.isError = true
             state.message = action.payload
         })
-
-
     }
 })
 

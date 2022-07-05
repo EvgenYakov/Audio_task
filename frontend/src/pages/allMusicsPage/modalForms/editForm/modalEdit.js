@@ -1,28 +1,29 @@
 
 import Cinput from "../../../../UI/CInput/Cinput";
 import Cbutton from "../../../../UI/CButton/cbutton";
-import './modalAdd.css'
+import './modalEdit.css'
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import TrackList from "../../../../component/tracklist/TrackList";
 import {useEffect, useState} from "react";
-import {addPlaylist} from "../../../../store/Slice/PlaylistSlice";
+import {addPlaylist, deletePlaylist, putPlaylist} from "../../../../store/Slice/PlaylistSlice";
 
 
-export default function ModalAdd(props){
+export default function ModalEdit(props){
+
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const [playlist,setPlaylist] = useState([])
     const {tracks, isLoading, isError, isSuccess, message } = useSelector(
         (state) => {
             return state.track
         }
     )
     const [formData, setFormData] = useState({
-        label: '',
-        url: ''
+        url:props.playList.url,
+        label:props.playList.label,
+        playlist:props.playList.tracks
     })
-    const {label, url} = formData
+    const {label, url,playlist} = formData
     const {user} = useSelector(
         (state) => {
             return state.auth
@@ -31,21 +32,27 @@ export default function ModalAdd(props){
 
     useEffect(()=>{
         setFormData({
-            label: '',
-            url: ''
+            url:props.playList.url,
+            label:props.playList.label,
+            playlist:props.playList.tracks
         })
-        setPlaylist([])
     },[props.active])
 
     const pushInPlayList=(id)=>{
         const newPlaylist = [...playlist]
         newPlaylist.push(id)
-        setPlaylist(newPlaylist)
+        setFormData(prevState => ({
+            ...prevState,
+            playlist:newPlaylist
+        }))
     }
 
     const delFromPlaylist = (id)=>{
         const newPlaylist = [...playlist].filter(trackId=>trackId!==id)
-        setPlaylist(newPlaylist)
+        setFormData(prevState => ({
+            ...prevState,
+            playlist:newPlaylist
+        }))
     }
 
     const onChange = (e) => {
@@ -55,20 +62,28 @@ export default function ModalAdd(props){
         }))
     }
 
-    const addSubPlaylist = (e)=>{
+    const updateSubPlaylist = (e)=>{
         e.preventDefault()
         const formData ={
+            _id:props.playList._id,
             label,
             url,
-            playlist
+            tracks:playlist
         }
-        dispatch(addPlaylist(formData))
+        dispatch(putPlaylist(formData))
         props.setActive(false)
     }
 
+    const daleteSubPlaylist = (e)=>{
+        e.preventDefault()
+        dispatch(deletePlaylist(props.playList._id))
+        props.setActive(false)
+    }
+
+
     return(
         <>
-            <form className="addPlst" onSubmit={e=>addSubPlaylist(e)}>
+            <form className="addPlst" onSubmit={e=>updateSubPlaylist(e)}>
                 <Cinput
                     id="floatingText"
                     place = "Track"
@@ -87,10 +102,12 @@ export default function ModalAdd(props){
                     onChange ={onChange}
                 >
                 </Cinput>
-                <Cbutton  style = "btn-primary btn-lg">
-                    Добавить
-                </Cbutton>
-
+                <button type="submit"  className = "btn btn-success btn-lg">
+                    Изменить
+                </button>
+                <button type="button" className = "btn btn-danger btn-lg" onClick={daleteSubPlaylist}>
+                    Удалить
+                </button>
             </form>
             <TrackList forModal={true} tracks={tracks} pushInPlaylist={pushInPlayList} delFromPlaylist={delFromPlaylist} playlist={playlist}/>
         </>

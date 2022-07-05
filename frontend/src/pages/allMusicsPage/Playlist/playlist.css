@@ -37,7 +37,7 @@
     display: block;
 }
 
-.card-body:hover{
+.change-card:hover{
     padding: 0;
 }
 

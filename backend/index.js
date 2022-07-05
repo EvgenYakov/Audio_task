@@ -6,6 +6,7 @@ const dotenv = require('dotenv').config()
 const addRouter = require('./routes/music.js')
 const authRouter = require('./routes/auth.js')
 const playlistRouter = require('./routes/playlist.js')
+const userRouter = require('./routes/user.js')
 
 const bodyParser = require('body-parser');
 const {errorHandler} = require("./middleware/errorMiddleware");
@@ -24,9 +25,10 @@ app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 //app.use('/music',addRouter);
-app.use('/music',addRouter);
 app.use('/auth',authRouter);
-app.use('/playlist',playlistRouter);
+app.use('/music',addRouter);
+app.use('/playlist',playlistRouter)
+app.use('/user',userRouter);
 
 
 app.use(errorHandler)

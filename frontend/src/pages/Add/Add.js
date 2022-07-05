@@ -38,8 +38,11 @@ export default function Add(){
         if (!user) {
             navigate('/auth')
         }
-        dispatch(getTracks())
+        if (user.role !=='admin') {
+            navigate('/')
+        }
 
+        dispatch(getTracks())
         return () => {
             dispatch(resetTrack)
         }
@@ -109,7 +112,10 @@ export default function Add(){
                             <UpdateForm update={updateTrackSub} changeForm={openAddForm} trackInfo={formControl.formValue}/>
                         }
                         <hr/>
-                        <TrackList tracks={tracks} delTrack={deleteTrack} editPage={true} changeForm={openEditForm}/>
+                        { isLoading  ?  <Spinner/>:
+                            (tracks.length === 0 ? <p>Пусто</p> :
+                                <TrackList tracks={tracks} delTrack={deleteTrack} editPage={true} changeForm={openEditForm}/>)
+                        }
                     </>
             }
 

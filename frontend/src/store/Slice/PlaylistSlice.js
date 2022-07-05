@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import {addTrack, trackSlice} from "./trackSlice";
 import playlistService from "../actions/playlistService";
+import {putUser} from "./AuthSlice";
 
 
 
@@ -45,6 +46,39 @@ export const getPlaylist = createAsyncThunk(
     }
 )
 
+export const putPlaylist = createAsyncThunk(
+    'playlist/put',
+    async (playlistData, thunkAPI)=>{
+        try{
+            const token = thunkAPI.getState().auth.user.token;
+            return await playlistService.putPlaylist(playlistData,token)
+        }catch (e) {
+            const mes =
+                (e.response && e.response.data && e.response.data.message) ||
+                e.message ||
+                e.toString()
+            return thunkAPI.rejectWithValue(mes)
+        }
+    }
+)
+
+export const deletePlaylist = createAsyncThunk(
+    'playlist/delete',
+    async (playlistId, thunkAPI)=>{
+        try{
+            const token = thunkAPI.getState().auth.user.token;
+            return await playlistService.deletePlaylist(playlistId,token)
+        }catch (e) {
+            const mes =
+                (e.response && e.response.data && e.response.data.message) ||
+                e.message ||
+                e.toString()
+            return thunkAPI.rejectWithValue(mes)
+        }
+    }
+)
+
+
 export const playlistSlice = createSlice({
     name:'playlist',
     initialState,
@@ -73,6 +107,32 @@ export const playlistSlice = createSlice({
                 state.playlists = action.payload
             })
             .addCase(getPlaylist.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(putPlaylist.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(putPlaylist.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.playlists.splice(state.playlists.findIndex(obj=>obj._id===action.payload._id),1,action.payload)
+            })
+            .addCase(putPlaylist.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(deletePlaylist.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(deletePlaylist.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.playlists = state.playlists.filter((track)=> track._id !== action.payload.id)
+            })
+            .addCase(deletePlaylist.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const Track = require("../models/music");
 
 const register = asyncHandler(async (req,res)=>{
     const {name,email,password} = req.body;
@@ -11,7 +12,7 @@ const register = asyncHandler(async (req,res)=>{
         throw new Error('Пользователь с таким email уже существует')
     } else {
         const hashPassword = await bcrypt.hash(password, 10)
-        const user = await User.create({name, email, password: hashPassword, role:'user', liked:[] })
+        const user = await User.create({name, email, password: hashPassword, role:'user'})
         if (user){
             res.status(201).json({
                 data:{
@@ -29,7 +30,6 @@ const register = asyncHandler(async (req,res)=>{
 
 
 function generateToken (id) {
-    console.log(process.env.SECRET)
     return jwt.sign({id}, process.env.SECRET, {expiresIn: "1h"})
 }
 
@@ -37,7 +37,6 @@ function generateToken (id) {
 const loginUser = asyncHandler(async (req,res)=>{
     const {email,password} = req.body;
     const user = await  User.findOne({email});
-    console.log(user)
     if(user && (await bcrypt.compare(password,user.password))){
         res.status(200).json({
             data:{
@@ -46,6 +45,7 @@ const loginUser = asyncHandler(async (req,res)=>{
                 email:user.email,
                 role:user.role,
                 liked:user.liked,
+                playlists:user.playlists,
                 token:generateToken(user.id)
             }
         })
@@ -54,8 +54,6 @@ const loginUser = asyncHandler(async (req,res)=>{
         throw new Error('Введенные данные не верны')
     }
 })
-
-
 
 
 

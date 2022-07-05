@@ -22,26 +22,36 @@ const userSchema = Schema(
         },
         liked:[
             {
-                trackId:{
                     type: Schema.Types.ObjectId,
                     ref:'Track',
                     required:true
-                }
             }
         ],
         playlists:[
             {
-                plstId:{
                     type: Schema.Types.ObjectId,
                     ref:'Playlist',
                     required:true
-                }
             }
         ]
-
 
     }
 
 )
+
+
+userSchema.methods.likeTrack = (trackId)=>{
+    try {
+        const liked = this.liked.slice(0)
+        liked.push(trackId)
+        this.liked = liked;
+        console.log(this)
+        return this.save();
+    }catch (e) {
+        console.log(e)
+    }
+
+}
+
 
 module.exports = model('User', userSchema)

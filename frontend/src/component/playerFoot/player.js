@@ -32,7 +32,8 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack}){
     [activeTrack] )
 
     useEffect(() => {
-            setTrIn(0)
+            setTrIn(0);
+            audioRef.current.pause();
         },
         [tracks] )
 

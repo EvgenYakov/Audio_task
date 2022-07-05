@@ -3,6 +3,7 @@ const mongodb = require('mongodb')
 const {Readable } = require('stream');
 const {Types} = require("mongoose");
 const Track = require("../models/music");
+const User = require("../models/user");
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 
@@ -99,7 +100,6 @@ const addTrack = asyncHandler(async (req,res)=>{
 
 const getTracks = asyncHandler(async (req,res)=>{
     try {
-        console.log(req.user)
         const tracks = await Track.find();
         res.status(200).json(tracks)
     }catch (e){
@@ -136,7 +136,14 @@ const putTrack = asyncHandler(async (req,res)=>{
             res.status(401)
             throw new Error('User not found')
         }
-
+        if(track.numOfLks<req.body.numOfLks){
+            req.user.liked.push(track._id);
+            await User.updateOne({_id:req.user._id}, {$set:{liked:req.user.liked}})
+        }
+        if(track.numOfLks>req.body.numOfLks){
+            const newLiked = [...req.user.liked].filter(id => id.toString()!==track._id.toString())
+            await User.updateOne({_id:req.user._id}, {$set:{liked:newLiked}})
+        }
         const updatedTrack= await Track.findByIdAndUpdate(req.params.id, req.body, {new:true})
         res.status(200).json(updatedTrack)
 

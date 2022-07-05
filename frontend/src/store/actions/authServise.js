@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const API_URL = '/auth/'
 
 
@@ -34,24 +36,6 @@ async function loginUser(userData){
         return Promise.reject(data)
     })
 }
-
-async function updateUser(userData,token){
-    return await fetch(API_URL + "login", {
-        method:'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    }).then(res=> res.json()).then(data =>{
-        if (data.data) {
-            localStorage.setItem('user', JSON.stringify(data.data))
-            return data.data;
-        }
-        return Promise.reject(data)
-    })
-}
-
 //.then(res => res.ok ? res : Promise.reject(res))
 async function logout(){
     localStorage.removeItem('user')
@@ -62,7 +46,6 @@ async function logout(){
 const authService = {
     register,
     loginUser,
-    updateUser,
     logout
 }
 

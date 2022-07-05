@@ -28,7 +28,6 @@ export async function getTracks(token){
         },
     }
     const response = await axios.get('/music/',config)
-    console.log(response)
     return response.data
 }
 

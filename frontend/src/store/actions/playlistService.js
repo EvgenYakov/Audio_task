@@ -28,10 +28,34 @@ export async function getPlaylist(token){
     return resp.data;
 }
 
+export async function putPlaylist(playlistData,token){
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+    }
+
+    const response = await axios.put('/playlist/'+playlistData._id,playlistData,config)
+    return response.data
+}
+
+export async function deletePlaylist(playlistId,token){
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await axios.delete('/playlist/'+playlistId,config)
+    return response.data
+}
+
+
 
 const playlistService = {
     addPlaylist,
-    getPlaylist
+    getPlaylist,
+    putPlaylist,
+    deletePlaylist
 }
 
 export default playlistService

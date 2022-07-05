@@ -10,6 +10,9 @@ import {useNavigate} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {toast} from "react-toastify";
 import {login, register, reset} from "../../store/Slice/AuthSlice";
+import {resetTrack} from "../../store/Slice/trackSlice";
+import {resetPLaylist} from "../../store/Slice/PlaylistSlice";
+import {resetUser} from "../../store/Slice/UserSlice";
 
 function Auth(){
     const [regForm,setRegForm] = useState(initialStateForFormReg);
@@ -28,6 +31,9 @@ function Auth(){
             toast.error(message)
         }
         if (isSuccess && user) {
+            dispatch(resetTrack())
+            dispatch(resetPLaylist())
+            dispatch(resetUser())
             navigate('/')
         }
         dispatch(reset())

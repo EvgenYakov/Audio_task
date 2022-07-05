@@ -4,8 +4,6 @@ import authService from '../actions/authServise'
 
 // Get user from localStorage
 const user = JSON.parse(localStorage.getItem('user'))
-console.log(user)
-
 const initialState = {
     user: user ? user : null,
     isError: false,
@@ -44,18 +42,7 @@ export const login = createAsyncThunk(
     }
 )
 
-export const updateUser = createAsyncThunk('auth/put', async (userData, thunkAPI)=>{
-    try{
-        const token = thunkAPI.getState().auth.user.token;
-        return await authService.updateUser(userData,token)
-    } catch (e){
-        const mes =
-            (e.response && e.response.data && e.response.data.message) ||
-            e.message ||
-            e.toString()
-        return thunkAPI.rejectWithValue(mes)
-    }
-} )
+
 
 export const logout = createAsyncThunk('auth/logout', async () => {
     await authService.logout()
@@ -72,6 +59,10 @@ export const authSlice = createSlice({
             state.isError = false
             state.message = ''
         },
+        putUser(state,action){
+            localStorage.setItem('user', JSON.stringify(action.payload))
+            state.user =action.payload
+        }
     },
     extraReducers: (builder)=>{
         builder
@@ -106,11 +97,12 @@ export const authSlice = createSlice({
                 state.user = null
             })
 
+
             .addCase(logout.fulfilled, (state) => {
             state.user = null
         })
     }
 })
 
-export const {reset} = authSlice.actions
+export const {reset,putUser} = authSlice.actions
 export default authSlice.reducer

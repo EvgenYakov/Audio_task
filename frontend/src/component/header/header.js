@@ -20,14 +20,12 @@ export default function LinkHeader(props){
     )
 
     function clickOnLink(to){
-        console.log(window.location.pathname)
-        console.log(to)
         setActive(to)
     }
 
     const onLogout = async () => {
         dispatch(logout())
-         dispatch(reset())
+        dispatch(reset())
         dispatch(resetTrack())
         dispatch(resetPLaylist())
         navigate('/auth')
