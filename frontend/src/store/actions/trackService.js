@@ -21,13 +21,9 @@ export async function addTrack(trackData,token){
     return resp.data;
 }
 
-export async function getTracks(token){
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-    const response = await axios.get('/music/',config)
+export async function getTracks(){
+
+    const response = await axios.get('/music/')
     return response.data
 }
 

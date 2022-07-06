@@ -7,10 +7,10 @@ import {putUser} from "./AuthSlice";
 
 const initialState = {
     playlists: [],
-    isError: false,
-    isSuccess: false,
-    playlistLoading: false,
-    message: '',
+    isPlstError: false,
+    isPlstSuccess: false,
+    isPlstLoading: false,
+    plstMessage: '',
 }
 
 export const addPlaylist = createAsyncThunk(
@@ -89,53 +89,53 @@ export const playlistSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(addPlaylist.fulfilled, (state, action) => {
-                state.isLoading = false
-                state.isSuccess = true
+                state. isPlstLoading = false
+                state. isPlstSuccess = true
                 state.playlists.push(action.payload)
             })
             .addCase(addPlaylist.rejected, (state, action) => {
-                state.isLoading = false
-                state.isError = true
-                state.message = action.payload
+                state.isPlstLoading = false
+                state.isPlstError = true
+                state.plstMessage = action.payload
             })
             .addCase(getPlaylist.pending, (state) => {
-                state.isLoading = true;
+                state. isPlstLoading = true;
             })
             .addCase(getPlaylist.fulfilled, (state, action) => {
-                state.isLoading = false
-                state.isSuccess = true
+                state.isPlstLoading = false
+                state.isPlstSuccess = true
                 state.playlists = action.payload
             })
             .addCase(getPlaylist.rejected, (state, action) => {
-                state.isLoading = false
-                state.isError = true
-                state.message = action.payload
+                state.isPlstLoading = false
+                state.isPlstError = true
+                state.plstMessage = action.payload
             })
             .addCase(putPlaylist.pending, (state) => {
-                state.isLoading = true;
+                state.isPlstLoading = true;
             })
             .addCase(putPlaylist.fulfilled, (state, action) => {
-                state.isLoading = false
-                state.isSuccess = true
+                state.isPlstLoading = false
+                state.isPlstSuccess = true
                 state.playlists.splice(state.playlists.findIndex(obj=>obj._id===action.payload._id),1,action.payload)
             })
             .addCase(putPlaylist.rejected, (state, action) => {
-                state.isLoading = false
-                state.isError = true
-                state.message = action.payload
+                state.isPlstLoading = false
+                state.isPlstError = true
+                state.plstMessage = action.payload
             })
             .addCase(deletePlaylist.pending, (state) => {
-                state.isLoading = true;
+                state.isPlstLoading = true;
             })
             .addCase(deletePlaylist.fulfilled, (state, action) => {
-                state.isLoading = false
-                state.isSuccess = true
+                state.isPlstLoading = false
+                state.isPlstSuccess = true
                 state.playlists = state.playlists.filter((track)=> track._id !== action.payload.id)
             })
             .addCase(deletePlaylist.rejected, (state, action) => {
-                state.isLoading = false
-                state.isError = true
-                state.message = action.payload
+                state.isPlstLoading = false
+                state.isPlstError = true
+                state.plstMessage = action.payload
             })
         }
     })

@@ -10,7 +10,7 @@ router.post('/upload', upload.single('file'), uploadFile);
 router.get('/stream/:id', streamFile)
 
 
-router.route('/').get(protect, getTracks).post(protect, addTrack)
+router.route('/').get(getTracks).post(protect, addTrack)
 router.route('/:id').delete(protect, deleteTrack).put(protect,putTrack)
 
 

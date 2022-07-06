@@ -37,7 +37,9 @@ function Auth(){
             navigate('/')
         }
         dispatch(reset())
-    }, [user, isError, isSuccess, message, navigate, dispatch])
+    }, [user, isError, navigate,isSuccess, message, dispatch])
+
+
 
 
     function onChangeHand(e,contName){

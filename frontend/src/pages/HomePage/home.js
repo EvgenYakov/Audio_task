@@ -46,6 +46,12 @@ export default function Home(){
         setActiveTrack(indexActiveTrack)
     }
 
+    const onAud = (trIn) => {
+        const track = {...tracks[trIn]}
+        track.numOfAud++;
+        dispatch(updateTrack(track))
+    }
+
     return (
         <div className="Home">
             <div className="mBody">
@@ -64,7 +70,7 @@ export default function Home(){
 
             {actTracks.length === 0 ?
                 <></> :
-                <PlayerFooter tracks={actTracks} activeTrack={activeTrack}  changeTrack={changeActiveTrack}/>
+                <PlayerFooter tracks={actTracks} activeTrack={activeTrack} onAud={onAud} changeTrack={changeActiveTrack}/>
             }
         </div>
     )

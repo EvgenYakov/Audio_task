@@ -57,28 +57,33 @@ const streamFile = asyncHandler(async (req,res)=>{
             const db = client.db('audios')
             const id  = ObjectId(req.params.id)
             db.collection('fs.files').findOne({_id:id}, (err,video) => {
-                if (!video){
-                    res.status(404).send("Error in upload");
-                    return;
+                try {
+                    if (!video){
+                        res.status(404).send("Error in upload");
+                        return;
+                    }
+                    const audioSize  = video.length;
+                    const start = Number(range.replace(/\D/g, ""));
+                    const end =audioSize-1;
+                    const contentLength  = end - start +1;
+                    const { length } = video;
+                    const headers = {
+                        "Content-Range": `bytes ${start}-${end}/${audioSize}`,
+                        "Accept-Ranges": "bytes",
+                        "Content-Length": contentLength,
+                        "Content-Type": "audio/mp3",
+                    }
+                    res.writeHead(206,headers)
+                    const bucket = new mongodb.GridFSBucket(db);
+                    const downloadStream = bucket.openDownloadStreamByName(video.filename,{
+                        start,
+                        end:length
+                    })
+                    downloadStream.pipe(res);
+                }catch (e) {
+                    console.log(e)
                 }
-                const audioSize  = video.length;
-                const start = Number(range.replace(/\D/g, ""));
-                const end =audioSize-1;
-                const contentLength  = end - start +1;
-                const { length } = video;
-                const headers = {
-                    "Content-Range": `bytes ${start}-${end}/${audioSize}`,
-                    "Accept-Ranges": "bytes",
-                    "Content-Length": contentLength,
-                    "Content-Type": "audio/mp3",
-                }
-                res.writeHead(206,headers)
-                const bucket = new mongodb.GridFSBucket(db);
-                const downloadStream = bucket.openDownloadStreamByName(video.filename,{
-                    start,
-                    end:length
-                })
-                downloadStream.pipe(res);
+
             })
 
         })

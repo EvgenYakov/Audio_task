@@ -11,6 +11,7 @@ import Modal from "../../component/modal/modal";
 import {useRef, useState} from "react";
 import ModalUserAdd from "./Modals/ModalUserAdd";
 import ModalUserEdit from "./Modals/ModalUserEdit";
+import Spinner from "../../component/Spinner/Spinner";
 
 
 export default function Users(props){
@@ -55,9 +56,7 @@ export default function Users(props){
     }, [navigate, isError, message, dispatch])
 
 
-    useEffect(()=>{
-        console.log(users)
-    },[users])
+
 
     const userUp = (id)=>{
         const newUser = {...users.find(user=>user._id===id)}
@@ -97,7 +96,11 @@ export default function Users(props){
                         <Plus/>
                     </button>
                 </div>
-                <UserList users={users} userUp={userUp}  openEditModal = {openEditModal}/>
+                {
+                    isLoading ? <Spinner/>
+                        :<UserList users={users} userUp={userUp}  openEditModal = {openEditModal}/>
+                }
+
             </div>
             <Modal active={modalActive} setActive={setModalActive}>
                 {modalEdit.current ?

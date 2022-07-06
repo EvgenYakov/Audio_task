@@ -33,8 +33,8 @@ function TrackList(props){
                             </div>
                         </div>
                         <div className="trackControls">
-                            {
-                                !user ? <button
+                            {!user ?
+                                    <button
                                         aria-label="Play"
                                         className="play"
                                         style={{
@@ -46,26 +46,26 @@ function TrackList(props){
                                     </button>
                                     :
                                     (!props.forModal ?
-                                (
-                                <>
-                            {props.editPage ?
-                                <ControlsForAdmin track={track} delTrack={props.delTrack} changeForm={props.changeForm}/>
-                                :
-                                <ControlsForUser track = {track} user={user} onLike={props.onLike}
-                                onDisLike={props.onDisLike} index={index}/>
-                            }
-                                </>
-                                )
-                                :
-                                (
-                                <ControlsForPlaylist
-                                track={track} playlist={props.playlist}
-                                delFromPlaylist={props.delFromPlaylist}
-                                pushInPlaylist={props.pushInPlaylist}
-                                />
-                                )
-                                )
-                            }
+                                        (
+                                            <>
+                                                {props.editPage ?
+                                                    <ControlsForAdmin track={track} delTrack={props.delTrack} changeForm={props.changeForm}/>
+                                                    :
+                                                    <ControlsForUser track = {track} user={user} onLike={props.onLike} playTrack={props.playTrack}
+                                                                     onDisLike={props.onDisLike} index={index} activeTrack={props.activeTrack}/>
+                                                 }
+                                            </>
+                                        )
+                                        :
+                                            (
+                                                <ControlsForPlaylist
+                                                    track={track} playlist={props.playlist}
+                                                    delFromPlaylist={props.delFromPlaylist}
+                                                    pushInPlaylist={props.pushInPlaylist}
+                                                />
+                                            )
+                                        )
+                                    }
 
                         </div>
                     </li>

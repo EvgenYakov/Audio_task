@@ -1,10 +1,9 @@
 import './Add.css'
-import {useState} from "react";
+import {useState,useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {addTrack, delTrack, getTracks, resetTrack, updateTrack} from "../../store/Slice/trackSlice";
 import Spinner from "../../component/Spinner/Spinner";
-import {useEffect} from "react";
 import {toast} from "react-toastify";
 import AddForm from "./addForm/addForm";
 import TrackList from "../../component/tracklist/TrackList";
@@ -12,7 +11,6 @@ import UpdateForm from "./updateForm/updateForm";
 import {logout} from "../../store/Slice/AuthSlice";
 
 export default function Add(){
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [formControl, setFormControl] = useState({addForm:true, formValue:null})
@@ -27,12 +25,12 @@ export default function Add(){
         }
     )
 
-
     useEffect(() => {
         if (isError) {
            toast.error(message)
             if (message===401) {
                 dispatch(logout())
+                navigate('/')
             }
         }
         if (!user) {

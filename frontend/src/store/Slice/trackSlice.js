@@ -18,6 +18,7 @@ export const addTrack = createAsyncThunk(
             const token = thunkAPI.getState().auth.user.token;
             return await trackService.addTrack(trackData,token)
         }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||
@@ -31,11 +32,8 @@ export const getTracks = createAsyncThunk(
     'music/get',
     async (_,thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
-            return await trackService.getTracks(token)
+            return await trackService.getTracks()
         }catch (e) {
-            console.log(e)
-            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||
@@ -52,6 +50,7 @@ export const delTrack = createAsyncThunk(
             const token = thunkAPI.getState().auth.user.token;
             return await trackService.deleteTrack(tracId,token)
         }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||
@@ -70,6 +69,7 @@ export const updateTrack = createAsyncThunk(
             const token = thunkAPI.getState().auth.user.token;
             return await trackService.updateTrack(trackData,token)
         }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||

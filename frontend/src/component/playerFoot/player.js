@@ -1,14 +1,16 @@
 import "./player.css"
 import Controls from "./controls/controls";
-import {useState,useEffect,useRef} from "react";
-import {useDispatch} from "react-redux";
+import {useState, useEffect, useRef} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {updateTrack} from "../../store/Slice/trackSlice";
+import {useLocation, useNavigate} from "react-router-dom";
 
 
 
-export default function PlayerFooter({tracks,activeTrack,changeTrack}){
+export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
+    const location = useLocation();
     const dispatch = useDispatch();
-
+    const navigate = useNavigate()
     const [trProgress, setTrProgress] = useState(0);
     const [trPlaying, setTrPlaying] = useState(false);
     const [trIn, setTrIn] = useState(0);
@@ -20,6 +22,13 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack}){
     const intervalRef = useRef();
     const audioRef = useRef( new Audio());
     const {duration} = audioRef.current
+
+
+    const {user} = useSelector(
+        (state) => {
+            return state.auth
+        }
+    )
 
     const curPos = duration ? `${(trProgress / duration) * 100}%` : '0%';
     const trackStyle = `
@@ -36,6 +45,8 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack}){
             audioRef.current.pause();
         },
         [tracks] )
+
+
 
     function toPrevTrack (){
         if (trIn - 1 < 0){
@@ -64,6 +75,7 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack}){
          },[1000])
      }
 
+
      useEffect(()=>{
          if (trPlaying){
               audioRef.current.play().then();
@@ -86,22 +98,28 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack}){
         }
     }, []);
 
+
+
     const completeCheck = ()=>{
-        setComplete(true);
-        audioRef.current.play().then();
-        setTrPlaying(true);
-        startTimer();
+        if(location.pathname==="/music" || location.pathname==="/"){
+            setComplete(true);
+            audioRef.current.play().then();
+            audioRef.current.muted =false;
+            setTrPlaying(true);
+            startTimer();
+        } else {
+            audioRef.current.src= "";
+            audioRef.current.muted =true;
+        }
+        audioRef.current.removeEventListener("canplay",completeCheck)
     }
 
     useEffect(()=>{
-        audioRef.current.removeEventListener("canplay",completeCheck)
         audioRef.current.src ="/music/stream/"+fileId
         audioRef.current.pause();
         setComplete(false);
         changeTrack(trIn);
-        const track = {...tracks[trIn]}
-        track.numOfAud++;
-        dispatch(updateTrack(track))
+        if(user) onAud(trIn)
 
         setTrProgress(audioRef.current.currentTime)
         if ( isReady.current ){

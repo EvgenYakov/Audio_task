@@ -13,6 +13,7 @@ import Spinner from "../../component/Spinner/Spinner";
 import PlayerFooter from "../../component/playerFoot/player";
 import {getPlaylist, resetPLaylist} from "../../store/Slice/PlaylistSlice";
 import ModalEdit from "./modalForms/editForm/modalEdit";
+import ListControl from "../../component/ListControl/ListControl";
 
 
  function AllMusic(){
@@ -20,8 +21,6 @@ import ModalEdit from "./modalForms/editForm/modalEdit";
      const navigate = useNavigate();
      const [actTracks, setActiveTracks] = useState([])
      const [activeTrack, setActiveTrack] = useState({})
-    // const [playlists, setPlaylists] = useState(initialPlaylists)
-     const [searchVal, setSearchVal] = useState("");
      const [modalActive,setModalActive]=useState(false)
      const modalEdit = useRef(null);
 
@@ -40,7 +39,7 @@ import ModalEdit from "./modalForms/editForm/modalEdit";
              return state.track
          }
      )
-     const {playlists} = useSelector(
+     const {playlists,plstMessage,isPlstSucces,isPlstError,isPlstLoading} = useSelector(
          (state) => {
              return state.playlist
          }
@@ -57,8 +56,7 @@ import ModalEdit from "./modalForms/editForm/modalEdit";
 
      useEffect(() => {
          if (isError) {
-             console.log(message)
-             if (message===401) {
+             if (message===401||plstMessage===401) {
                  toast.error("Время сеанса истекло")
                  dispatch(resetTrack())
                  dispatch(logout())
@@ -66,6 +64,16 @@ import ModalEdit from "./modalForms/editForm/modalEdit";
                  return
              }
              toast.error(message)
+         }
+         if (isPlstError) {
+             if (plstMessage===401) {
+                 toast.error("Время сеанса истекло")
+                 dispatch(resetTrack())
+                 dispatch(logout())
+                 navigate('/auth')
+                 return
+             }
+             toast.error(plstMessage)
          }
          if (!user) {
              navigate('/auth')
@@ -77,40 +85,13 @@ import ModalEdit from "./modalForms/editForm/modalEdit";
              dispatch(resetTrack())
              dispatch(resetPLaylist())
          }
-     }, [navigate, isError, message, dispatch])
+     }, [navigate, isError, message, dispatch,plstMessage,isPlstError])
 
 
      useEffect(() => {
          setActiveTracks([...tracks])
          setActiveTrack(0)
      }, [isSuccess])
-
-    const onSortCount = ()=>{
-        const sortTracks = actTracks.slice(0);
-        sortTracks.sort((a,b)=> b.numOfAud - a.numOfAud)
-        setActiveTracks(sortTracks)
-    }
-
-    const onSortLiked = ()=>{
-        const sortTracks = actTracks.slice(0);
-        sortTracks.sort((a,b)=> b.numOfLks - a.numOfLks)
-        setActiveTracks(sortTracks)
-    }
-
-     const onAll = ()=>{
-         setActiveTracks(tracks)
-     }
-
-    const onSubSearch = (e)=>{
-        e.preventDefault();
-        const searchList = [...tracks].filter((track)=> track.label.match(new RegExp(`${searchVal}`,'gi')));
-        console.log(searchList)
-        if (searchList.length === 0){
-            return 0;
-        }
-        setActiveTracks(searchList);
-        setActiveTrack(0);
-    }
 
 
     const playTrack= (id)=>{
@@ -157,6 +138,12 @@ import ModalEdit from "./modalForms/editForm/modalEdit";
          dispatch(updateTrack(newTrack))
      }
 
+     const onAud = (trIn) => {
+         const track = {...tracks[trIn]}
+         track.numOfAud++;
+         dispatch(updateTrack(track))
+     }
+
     return (
         <div className="AllMusic">
             <div className="mBody">
@@ -164,19 +151,7 @@ import ModalEdit from "./modalForms/editForm/modalEdit";
                    Музыка
                </h1>
                 <Playlist playlists={playlists} openAddModal={openAddModal} openEditModal={openEditModal} onLiked={onLiked} onPlaylist={onPlaylist}/>
-                {/*Сделать компонент */}
-                <div className="listControls">
-                    <div className="btn-group m-1">
-                        <button className="btn btn-dark m-0"  onClick={()=>onAll()}>Все</button>
-                        <button className="btn btn-dark m-0"  onClick={()=>onSortCount()} >Самые прослушиваемые</button>
-                        <button className="btn btn-dark m-0"  onClick={()=>onSortLiked()}>Популярные</button>
-                    </div>
-                    <form className="d-flex m-1" onSubmit={(e)=>onSubSearch(e)}>
-                        <input className="form-control me-2 opacity-75" type="search" placeholder="Поиск трека" value={searchVal} onChange={(e)=>{setSearchVal(e.target.value)}} aria-label="Search"/>
-                        <button className="btn btn-outline-light m-0" type="submit">Search</button>
-                    </form>
-                </div>
-
+                <ListControl actTracks={actTracks} setActiveTracks={setActiveTracks} setActiveTrack={setActiveTrack}/>
                 <hr/>
                 { isLoading  ?  <Spinner/>:
                     (actTracks.length === 0 ? <p>Пусто</p> :
@@ -193,7 +168,7 @@ import ModalEdit from "./modalForms/editForm/modalEdit";
 
             {actTracks.length === 0 ?
                 <></> :
-                <PlayerFooter tracks={actTracks} activeTrack={activeTrack}  changeTrack={changeActiveTrack}/>
+                <PlayerFooter tracks={actTracks} activeTrack={activeTrack} onAud={onAud} changeTrack={changeActiveTrack}/>
             }
         </div>
     )
