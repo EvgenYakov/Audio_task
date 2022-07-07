@@ -90,7 +90,7 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
     },[volume])
 
     useEffect(() => {
-        audioRef.current.src = '/music/stream/'+fileId
+        audioRef.current.src = '/stream/'+fileId
         return () => {
             audioRef.current.pause();
             clearInterval(intervalRef.current);
@@ -102,9 +102,6 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
     }, [])
 
     const completeCheck = (e)=>{
-        console.log(e.target)
-        console.log(audioRef.current)
-        console.log(audioRef.current===e.target)
         if("http://localhost:3000"+location.pathname===e.path[0].baseURI){
             setComplete(true);
             audioRef.current.play().then();
@@ -119,7 +116,7 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
     }
 
     useEffect(()=>{
-        audioRef.current.src ="/music/stream/"+fileId
+        audioRef.current.src ="/stream/"+fileId
         audioRef.current.pause();
         setComplete(false);
         changeTrack(trIn);

@@ -7,6 +7,7 @@ const addRouter = require('./routes/music.js')
 const authRouter = require('./routes/auth.js')
 const playlistRouter = require('./routes/playlist.js')
 const userRouter = require('./routes/user.js')
+const streamRouter = require('./routes/stream.js')
 
 const bodyParser = require('body-parser');
 const {errorHandler} = require("./middleware/errorMiddleware");
@@ -29,6 +30,8 @@ app.use('/auth',authRouter);
 app.use('/music',addRouter);
 app.use('/playlist',playlistRouter)
 app.use('/user',userRouter);
+app.use('/stream',streamRouter);
+
 
 
 app.use(errorHandler)

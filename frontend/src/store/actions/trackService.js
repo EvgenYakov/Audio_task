@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export async function addTrack(trackData,token){
-    const uploadRes =  await axios.post('/music/upload', trackData.data, {
+    const uploadRes =  await axios.post('/stream/upload', trackData.data, {
         headers:{
             'Content-Type': 'multipart/form-data',
         }
