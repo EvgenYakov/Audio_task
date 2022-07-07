@@ -1,28 +1,25 @@
 import "./player.css"
 import Controls from "./controls/controls";
-import {useState, useEffect, useRef} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {updateTrack} from "../../store/Slice/trackSlice";
+import {useState, useEffect, useRef, useLayoutEffect} from "react";
+import {useSelector} from "react-redux";
 import {useLocation, useNavigate} from "react-router-dom";
+import {ReactComponent as Music} from "../../assets/music.svg";
 
 
 
 export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
     const location = useLocation();
-    const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [trProgress, setTrProgress] = useState(0);
     const [trPlaying, setTrPlaying] = useState(false);
     const [trIn, setTrIn] = useState(0);
     const {fileId}= tracks[trIn];
     const [complete,setComplete] = useState(false);
     const [volume,setVolume] = useState(1)
-
     const isReady = useRef(false);
     const intervalRef = useRef();
     const audioRef = useRef( new Audio());
     const {duration} = audioRef.current
-
 
     const {user} = useSelector(
         (state) => {
@@ -46,7 +43,9 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
         },
         [tracks] )
 
-
+    useEffect(()=>{
+        audioRef.current.removeEventListener("canplay",completeCheck)
+    },[navigate])
 
     function toPrevTrack (){
         if (trIn - 1 < 0){
@@ -98,10 +97,15 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
         }
     }, []);
 
+    useLayoutEffect(() => () => {
+        audioRef.current.removeEventListener("canplay",completeCheck)
+    }, [])
 
-
-    const completeCheck = ()=>{
-        if(location.pathname==="/music" || location.pathname==="/"){
+    const completeCheck = (e)=>{
+        console.log(e.target)
+        console.log(audioRef.current)
+        console.log(audioRef.current===e.target)
+        if("http://localhost:3000"+location.pathname===e.path[0].baseURI){
             setComplete(true);
             audioRef.current.play().then();
             audioRef.current.muted =false;
@@ -143,7 +147,6 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
         }
         startTimer();
     }
-
     return(
         <div className="playFoot">
             <input
@@ -166,7 +169,7 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
                         toPrevTrack={toPrevTrack}
                         setPlay={setTrPlaying}
                     />
-                    <img className="small-img" src={tracks[trIn].url}/>
+                    {tracks[trIn].url ?  <img src={tracks[trIn].url} className="small-img"/> : <Music className="small-img"/>}
                     <div style={{margin:"0 20px"}}>
                         <p className="m-0">
                             {tracks[trIn].label}

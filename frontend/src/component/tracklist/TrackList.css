@@ -18,6 +18,11 @@
     margin-right: 5px;
 }
 
+.small-img path {
+     fill: white;
+ }
+
+
 .info {
     display: flex;
     flex-direction: row;

@@ -35,6 +35,7 @@ export default function Add(){
         }
         if (!user) {
             navigate('/auth')
+            return
         }
         if (user.role !=='admin') {
             navigate('/')

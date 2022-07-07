@@ -20,6 +20,7 @@ export const addPlaylist = createAsyncThunk(
             const token = thunkAPI.getState().auth.user.token;
             return await playlistService.addPlaylist(playlistData,token)
         }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||
@@ -37,6 +38,7 @@ export const getPlaylist = createAsyncThunk(
             const token = thunkAPI.getState().auth.user.token;
             return await playlistService.getPlaylist(token)
         }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||
@@ -53,6 +55,7 @@ export const putPlaylist = createAsyncThunk(
             const token = thunkAPI.getState().auth.user.token;
             return await playlistService.putPlaylist(playlistData,token)
         }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||
@@ -69,6 +72,7 @@ export const deletePlaylist = createAsyncThunk(
             const token = thunkAPI.getState().auth.user.token;
             return await playlistService.deletePlaylist(playlistId,token)
         }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||

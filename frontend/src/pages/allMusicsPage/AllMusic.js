@@ -63,12 +63,13 @@ import ListControl from "../../component/ListControl/ListControl";
                  navigate('/auth')
                  return
              }
+             console.log(message)
              toast.error(message)
          }
          if (isPlstError) {
              if (plstMessage===401) {
                  toast.error("Время сеанса истекло")
-                 dispatch(resetTrack())
+                 dispatch(resetPLaylist())
                  dispatch(logout())
                  navigate('/auth')
                  return

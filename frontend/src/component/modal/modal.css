@@ -7,7 +7,6 @@
     left: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
     opacity: 0;
     pointer-events: none;
     transition: 0.5s;
@@ -19,13 +18,14 @@
 }
 
 .modal_content{
-    margin-top: 50px;
+    height: max-content;
     padding: 20px;
     border-radius: 12px;
     background-color: white;
     width: 50vw;
     transform: scale(0.5);
     transition: 0.4s all;
+    margin-top: 100px;
 }
 
 

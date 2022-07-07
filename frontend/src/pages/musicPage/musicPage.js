@@ -5,6 +5,7 @@ import CommentList from "./CommentList/CommentList";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {updateTrack} from "../../store/Slice/trackSlice";
+import {ReactComponent as Music} from "../../assets/music.svg";
 
 
 export default function MusicPage(props){
@@ -22,8 +23,9 @@ export default function MusicPage(props){
     const addComment = (e)=>{
         e.preventDefault()
         const commentedTrack = {...track}
+        const name = user.name === "" ? user.email : user.name;
         const comment = {
-            name: user.name,
+            name,
             userId: user._id,
             text: commentValue
         }
@@ -40,7 +42,7 @@ export default function MusicPage(props){
                         Страница трека
                     </h1>
                     <div className='big-info'>
-                        <img src={track.url} className='big-image'/>
+                        {track.url ?  <img src={track.url} className="big-image"/> : <Music className="big-image"/>}
                         <div>
                             <p className="fs-1">{track.label}</p>
                             <p className="fs-2 fw-normal opacity-50">{track.author}</p>

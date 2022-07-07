@@ -45,6 +45,7 @@ export default function Users(props){
         }
         if (!user) {
             navigate('/auth')
+            return
         }
         if (user.role !=='admin') {
             navigate('/')

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import './header.css'
 import RenderLinks from "./Links/RenderLinks";
 import {useState} from "react";
@@ -18,6 +18,10 @@ export default function LinkHeader(props){
             return state.auth
         }
     )
+
+    useEffect(()=>{
+        setActive(location.pathname)
+    },[navigate])
 
     function clickOnLink(to){
         setActive(to)
