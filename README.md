@@ -17,3 +17,9 @@ npm run dev
 cd frontend
 npm start
 ```
+
+admin data 
+```
+email: admin@mail.ru
+password: 111111
+```

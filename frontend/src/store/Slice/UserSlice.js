@@ -92,8 +92,7 @@ export const UserSlice = createSlice(
                 return initialState
             },
             deleteAdminUser(state,action){
-                console.log(action.payload)
-                state.users = state.users.filter(track=>track._id===action.payload)
+                state.users = state.users.filter(track=>track._id!==action.payload)
             }
         },
         extraReducers:builder => {
