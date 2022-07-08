@@ -13,7 +13,7 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
     const [trProgress, setTrProgress] = useState(0);
     const [trPlaying, setTrPlaying] = useState(false);
     const [trIn, setTrIn] = useState(0);
-    const {fileId}= tracks[trIn];
+    const {fileId} = tracks[trIn];
     const [complete,setComplete] = useState(false);
     const [volume,setVolume] = useState(1)
     const isReady = useRef(false);

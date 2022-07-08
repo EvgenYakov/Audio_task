@@ -84,6 +84,7 @@ export default function Add(){
 
 
     const openEditForm =(track)=>{
+        window.scrollTo(0, 0);
         setFormControl({
             addForm: false,
             formValue: {...track}

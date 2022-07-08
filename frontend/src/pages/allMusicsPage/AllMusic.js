@@ -154,7 +154,7 @@ import ListControl from "../../component/ListControl/ListControl";
                 <Playlist playlists={playlists} openAddModal={openAddModal} openEditModal={openEditModal} onLiked={onLiked} onPlaylist={onPlaylist}/>
                 <ListControl actTracks={actTracks} setActiveTracks={setActiveTracks} setActiveTrack={setActiveTrack}/>
                 <hr/>
-                { isLoading  ?  <Spinner/>:
+                { isLoading || isPlstLoading  ?  <Spinner/>:
                     (actTracks.length === 0 ? <p>Пусто</p> :
                      <TrackList tracks={actTracks} playTrack={playTrack} onLike={onLike} onDisLike={onDisLike} activeTrack={activeTrack}/>)
                 }
