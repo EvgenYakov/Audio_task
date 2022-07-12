@@ -1,7 +1,7 @@
 
 import {ReactComponent as Music} from "../../assets/music.svg";
 import './TrackList.css'
-import {useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
 import ControlsForUser from "./controlsForUser/controlsForUser";
 import ControlsForAdmin from "./controlsForAdmin/controlsForAdmin";
@@ -9,6 +9,7 @@ import ControlsForPlaylist from "./controlsForPlaylist/controlsForPlaylist";
 import {ReactComponent as Play} from "../../assets/play.svg";
 
 function TrackList(props){
+    const location = useLocation()
     const tracks =props.tracks ? [...props.tracks] : null;
     const {user} = useSelector(
         (state) => {
@@ -33,7 +34,7 @@ function TrackList(props){
                             </div>
                         </div>
                         <div className="trackControls">
-                            {!user ?
+                            {location.pathname === "/" ?
                                     <button
                                         aria-label="Play"
                                         className="play"

@@ -4,37 +4,33 @@ const API_URL = '/auth/'
 
 
 async function register(userData){
-    return  await fetch(API_URL + "register", {
-        method:'POST',
+   const config = {
         headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
         },
-        body: JSON.stringify(userData)
-    }).then(res=> res.json()).then(data =>{
-        if (data.data) {
-            localStorage.setItem('user', JSON.stringify(data.data))
-            return data.data;
-        }
-        return Promise.reject(data)
-    })
+    }
+    const resp =  await axios.post('/auth/'+"register", userData, config)
+    if (resp.data) {
+        localStorage.setItem('user', JSON.stringify(resp.data))
+    }
+
+    return resp.data;
 }
 
 async function loginUser(userData){
-    return await fetch(API_URL + "login", {
-        method:'POST',
+    const config = {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        body: JSON.stringify(userData)
-    }).then(res=> res.json()).then(data =>{
-        if (data.data) {
-            localStorage.setItem('user', JSON.stringify(data.data))
-            return data.data;
-        }
-        return Promise.reject(data)
-    })
+    }
+    const resp =  await axios.post('/auth/'+"login", userData, config)
+    if (resp.data) {
+        localStorage.setItem('user', JSON.stringify(resp.data))
+    }
+
+    return resp.data;
 }
 //.then(res => res.ok ? res : Promise.reject(res))
 async function logout(){

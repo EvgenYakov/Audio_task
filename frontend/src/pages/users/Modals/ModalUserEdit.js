@@ -77,6 +77,7 @@ export default function ModalUserEdit(props){
                 place = "Password"
                 label="Введите пароль"
                 name="password"
+                type='password'
                 value={password}
                 onChange ={onChange}
             >
