@@ -16,3 +16,13 @@ ul {
     list-style: none;
     padding-left: 0rem;
 }
+
+
+@media (max-width: 600px) {
+
+    .listControls{
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+    }
+}

@@ -22,3 +22,8 @@ input[type=range] {
     cursor: pointer;
 }
 
+@media (max-width: 600px) {
+    .playerImg{
+        display:none;
+    }
+}

@@ -166,7 +166,7 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
                         toPrevTrack={toPrevTrack}
                         setPlay={setTrPlaying}
                     />
-                    {tracks[trIn].url ?  <img src={tracks[trIn].url} className="small-img"/> : <Music className="small-img"/>}
+                    {tracks[trIn].url ?  <img src={tracks[trIn].url} className="small-img playerImg"/> : <Music className="small-img playerImg"/>}
                     <div style={{margin:"0 20px"}}>
                         <p className="m-0">
                             {tracks[trIn].label}
