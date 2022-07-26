@@ -7,7 +7,7 @@ import ModalAdd from "./modalForms/add/modalAdd";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {logout, putUser} from "../../store/Slice/AuthSlice";
-import {getTracks, updateTrack,resetTrack} from "../../store/Slice/trackSlice";
+import {getTracks, updateTrack, resetTrack, service, addView} from "../../store/Slice/trackSlice";
 import {useNavigate} from "react-router-dom";
 import Spinner from "../../component/Spinner/Spinner";
 import PlayerFooter from "../../component/playerFoot/player";
@@ -20,7 +20,7 @@ import ListControl from "../../component/ListControl/ListControl";
      const dispatch = useDispatch()
      const navigate = useNavigate();
      const [actTracks, setActiveTracks] = useState([])
-     const [activeTrack, setActiveTrack] = useState({})
+     const [activeTrack, setActiveTrack] = useState(0)
      const [modalActive,setModalActive]=useState(false)
      const modalEdit = useRef(null);
 
@@ -34,12 +34,12 @@ import ListControl from "../../component/ListControl/ListControl";
          setModalActive(true)
      }
 
-     const {tracks, isLoading, isError, isSuccess, message } = useSelector(
+     const {tracks, isLoading, isError, isSuccess, message,viewAdded} = useSelector(
          (state) => {
              return state.track
          }
      )
-     const {playlists,plstMessage,isPlstSucces,isPlstError,isPlstLoading} = useSelector(
+     const {playlists,plstMessage,isPlstError,isPlstLoading} = useSelector(
          (state) => {
              return state.playlist
          }
@@ -52,32 +52,21 @@ import ListControl from "../../component/ListControl/ListControl";
          }
      )
 
-
-
      useEffect(() => {
-         if (isError) {
+         if (isError || isPlstError) {
              if (message===401||plstMessage===401) {
                  toast.error("Время сеанса истекло")
                  dispatch(resetTrack())
-                 dispatch(logout())
-                 navigate('/auth')
-                 return
-             }
-             console.log(message)
-             toast.error(message)
-         }
-         if (isPlstError) {
-             if (plstMessage===401) {
-                 toast.error("Время сеанса истекло")
                  dispatch(resetPLaylist())
                  dispatch(logout())
                  navigate('/auth')
                  return
              }
-             toast.error(plstMessage)
+             toast.error(message)
          }
          if (!user) {
              navigate('/auth')
+             return
          }
          dispatch(getTracks())
          dispatch(getPlaylist())
@@ -90,59 +79,75 @@ import ListControl from "../../component/ListControl/ListControl";
 
 
      useEffect(() => {
-         setActiveTracks([...tracks])
-         setActiveTrack(0)
+         if (tracks.length){
+             setActiveTracks(JSON.parse(JSON.stringify(tracks)));
+             setActiveTrack(tracks[0]._id)
+         }
      }, [isSuccess])
 
 
+     useEffect(()=>{
+         if(activeTrack && tracks.length){
+             dispatch(addView(activeTrack))
+         }
+     },[activeTrack])
+
+     useEffect(()=>{
+         if(viewAdded){
+             const chTracks = JSON.parse(JSON.stringify(tracks)).filter(track=>actTracks.find(tr=>tr._id===track._id))
+             setActiveTracks(chTracks)
+         }
+     },[viewAdded])
+
     const playTrack= (id)=>{
-        const activeTracks = [...actTracks];
-        const indexActiveTrack = activeTracks.findIndex((track)=>track._id===id)
-        const track = {...activeTracks[indexActiveTrack]}
-        track.numOfAud++;
-        dispatch(updateTrack(track))
-        setActiveTrack(indexActiveTrack)
+            setActiveTrack(id)
      }
-     const changeActiveTrack=(index)=>{
-         setActiveTrack(index)
+
+     const changeActiveTrack=(id)=>{
+         if (id !== activeTrack)
+            setActiveTrack(id)
      }
 
      const onPlaylist = (tracksId)=>{
          const active = tracks.filter(track => tracksId.includes(track._id));
          setActiveTracks(active)
-         setActiveTrack(0);
+         if (active[0]._id !== activeTrack)
+         setActiveTrack(active[0]._id);
      }
      const onLiked = ()=>{
          const trks = tracks.filter(track=>user.liked.find(id=>track._id===id))
-
          setActiveTracks(trks)
-         setActiveTrack(0);
+         if (trks[0]._id !== activeTrack)
+           setActiveTrack(trks[0]._id);
      }
 
-     const onLike = (track)=>{
-         const newTrack = {...track}
+     const onLike = (_id)=>{
          const newLiked = [...user.liked]
          const newUser = {...user}
-         newTrack.numOfLks++;
-         newLiked.push(track._id)
+         const trackData = {
+             id:_id,
+             like:true
+         }
+         newLiked.push(_id)
          newUser.liked = newLiked;
          dispatch(putUser(newUser))
-         dispatch(updateTrack(newTrack))
+         dispatch(service(trackData))
      }
-     const onDisLike = (track)=>{
-         const newTrack = {...track}
-         const newLiked = [...user.liked].filter(id=>id!==track._id)
-         const newUser = {...user}
-         newTrack.numOfLks--;
+     const onDisLike = (_id)=>{
+         const newLiked = [...user.liked].filter(id=>id!==_id)
+         const newUser = {...user};
+         const trackData = {
+             id:_id,
+             like:false
+         }
          newUser.liked = newLiked;
          dispatch(putUser(newUser))
-         dispatch(updateTrack(newTrack))
+         dispatch(service(trackData))
      }
 
-     const onAud = (trIn) => {
-         const track = {...tracks[trIn]}
-         track.numOfAud++;
-         dispatch(updateTrack(track))
+     const onAud = (id) => {
+
+         dispatch(addView(id))
      }
 
     return (
@@ -155,7 +160,7 @@ import ListControl from "../../component/ListControl/ListControl";
                 <ListControl actTracks={actTracks} setActiveTracks={setActiveTracks} setActiveTrack={setActiveTrack}/>
                 <hr/>
                 { isLoading || isPlstLoading  ?  <Spinner/>:
-                    (actTracks.length === 0 ? <p>Пусто</p> :
+                    (actTracks.length === 0 && activeTrack ? <p>Пусто</p> :
                      <TrackList tracks={actTracks} playTrack={playTrack} onLike={onLike} onDisLike={onDisLike} activeTrack={activeTrack}/>)
                 }
 
@@ -167,7 +172,7 @@ import ListControl from "../../component/ListControl/ListControl";
                 }
             </Modal>
 
-            {actTracks.length === 0 ?
+            {actTracks.length === 0 || !activeTrack ?
                 <></> :
                 <PlayerFooter tracks={actTracks} activeTrack={activeTrack} onAud={onAud} changeTrack={changeActiveTrack}/>
             }

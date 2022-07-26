@@ -1,15 +1,16 @@
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import './musicPage.css'
 import Cbutton from "../../UI/CButton/cbutton";
 import CommentList from "./CommentList/CommentList";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {updateTrack} from "../../store/Slice/trackSlice";
+import {getComments, addComment, resetTrack} from "../../store/Slice/trackSlice";
 import {ReactComponent as Music} from "../../assets/music.svg";
-
+import {useEffect} from "react";
 
 export default function MusicPage(props){
     const location = useLocation()
+    const navigate = useNavigate()
     const [commentValue,setCommentValue]=useState("");
     const dispatch = useDispatch()
     const {user} = useSelector(
@@ -18,20 +19,37 @@ export default function MusicPage(props){
         }
     )
 
-    const [track,setTrack] = useState(location.state.track)
-    console.log(track)
-    const addComment = (e)=>{
+    const {tracks,comments,isLoading,isSuccess } = useSelector(
+        (state) => {
+            return state.track
+        }
+    )
+
+    const [track,setTrack] = useState({
+    ...tracks[0]
+    })
+
+    useEffect(() => {
+        dispatch(getComments(track._id))
+        return () => {
+            dispatch(resetTrack())
+        }
+    }, [navigate, dispatch])
+
+
+    const addComm = (e)=>{
         e.preventDefault()
-        const commentedTrack = {...track}
         const name = user.name === "" ? user.email : user.name;
         const comment = {
-            name,
-            userId: user._id,
-            text: commentValue
+            id:track._id,
+            data:{
+                name,
+                userId: user._id,
+                text: commentValue
+            }
         }
-        commentedTrack.comments.items.push(comment)
-        setTrack(commentedTrack)
-        dispatch(updateTrack(commentedTrack))
+        console.log(123)
+        dispatch(addComment(comment))
     }
 
     return (
@@ -54,18 +72,28 @@ export default function MusicPage(props){
                     </div>
                     <p className="fs-3 mt-5 ms-2">Комментарии</p>
                     <hr/>
-                    <form className="commentForm" onSubmit={e=>addComment(e)}>
-                        <div className="form-floating opacity-50">
+                    {
+                        !user ?
+                            <>
+                            </>
+                            :
+                            <form className="commentForm" onSubmit={e=>addComm(e)}>
+                                <div className="form-floating opacity-50">
                             <textarea className="form-control w-100" placeholder="Leave a comment here" id="floatingTextarea" style={{height: "100px"}}
                                       value={commentValue} onChange={(e)=>{setCommentValue(e.target.value)}}
                             />
-                            <label htmlFor="floatingTextarea">Оставить комментарий</label>
-                        </div>
-                        <Cbutton style = "w-25 btn-secondary btn-lg m-2">
-                            Добавить
-                        </Cbutton>
-                    </form>
-                    <CommentList items = {track.comments.items}/>
+                                    <label htmlFor="floatingTextarea">Оставить комментарий</label>
+                                </div>
+                                <Cbutton style = "w-25 btn-secondary btn-lg m-2">
+                                    Добавить
+                                </Cbutton>
+                            </form>
+                    }
+                    {
+                        comments.length !== 0 ?
+                            <CommentList items = {comments}/>
+                            :<></>
+                    }
                 </div>
             </div>
         </div>

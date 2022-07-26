@@ -1,16 +1,22 @@
 
 import {ReactComponent as Music} from "../../assets/music.svg";
 import './TrackList.css'
-import {useLocation} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import ControlsForUser from "./controlsForUser/controlsForUser";
 import ControlsForAdmin from "./controlsForAdmin/controlsForAdmin";
 import ControlsForPlaylist from "./controlsForPlaylist/controlsForPlaylist";
 import {ReactComponent as Play} from "../../assets/play.svg";
+import {ReactComponent as Page} from "../../assets/audio.svg";
+import {useEffect, useState} from "react";
+import {addView} from "../../store/Slice/trackSlice";
 
 function TrackList(props){
     const location = useLocation()
-    const tracks =props.tracks ? [...props.tracks] : null;
+    const navigate = useNavigate();
+    const tracks= props.tracks ? JSON.parse(JSON.stringify(props.tracks)) : [];
+
+
     const {user} = useSelector(
         (state) => {
             return state.auth
@@ -35,16 +41,32 @@ function TrackList(props){
                         </div>
                         <div className="trackControls">
                             {location.pathname === "/" ?
-                                    <button
-                                        aria-label="Play"
-                                        className="play"
-                                        style={{
-                                            border: 'none',
-                                            cursor: 'pointer'}}
-                                        onClick={()=>props.playTrack(track._id)}
-                                    >
-                                        <Play/>
-                                    </button>
+                                    <>
+                                        {
+                                            props.activeTrack===track._id ?
+                                                <></>
+                                                : <button
+                                                    aria-label="Play"
+                                                    className="play"
+                                                    style={{
+                                                        border: 'none',
+                                                        cursor: 'pointer'}}
+                                                    onClick={()=>props.playTrack(track._id)}
+                                                >
+                                                    <Play/>
+                                                </button>
+                                        }
+                                        <button
+                                            aria-label="Страница"
+                                            className="page"
+                                            style={{
+                                                border: 'none',
+                                                cursor: 'pointer'}}
+                                            onClick={()=>{navigate("/music/"+track._id, {state:{id:track._id}})}}
+                                        >
+                                            <Page/>
+                                        </button>
+                                    </>
                                     :
                                     (!props.forModal ?
                                         (
@@ -53,7 +75,7 @@ function TrackList(props){
                                                     <ControlsForAdmin track={track} delTrack={props.delTrack} changeForm={props.changeForm}/>
                                                     :
                                                     <ControlsForUser track = {track} user={user} onLike={props.onLike} playTrack={props.playTrack}
-                                                                     onDisLike={props.onDisLike} index={index} activeTrack={props.activeTrack}/>
+                                                                     onDisLike={props.onDisLike} activeTrack={props.activeTrack}/>
                                                  }
                                             </>
                                         )

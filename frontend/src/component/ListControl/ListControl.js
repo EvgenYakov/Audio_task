@@ -29,13 +29,18 @@ export default function ListControl(props){
 
     const onSubSearch = (e)=>{
         e.preventDefault();
-        const searchList = [...tracks].filter((track)=> track.label.match(new RegExp(`${searchVal}`,'gi')));
-        console.log(searchList)
+        console.log(tracks)
+        console.log(searchVal)
+        const searchList = [...tracks].filter((track)=> (
+            track.label.match(new RegExp(`${searchVal}`,'gi')) ||
+            track.author.match(new RegExp(`${searchVal}`,'gi'))
+            )
+        );
         if (searchList.length === 0){
             return 0;
         }
         props.setActiveTracks(searchList);
-        props.setActiveTrack(0);
+        props.setActiveTrack(searchList[0]._id);
     }
     return(
         <div className="listControls">

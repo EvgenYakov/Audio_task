@@ -17,7 +17,11 @@ const addTrack = asyncHandler(async (req,res)=>{
 
 const getTracks = asyncHandler(async (req,res)=>{
     try {
-        const tracks = await Track.find();
+        const tracks = await Track.find().select('-comments');
+        if (req.user === "guest"){
+            res.status(200).json(tracks.slice(0,10))
+            return
+        }
         res.status(200).json(tracks)
     }catch (e){
         res.status(400)
@@ -63,7 +67,72 @@ const putTrack = asyncHandler(async (req,res)=>{
         }
         const updatedTrack= await Track.findByIdAndUpdate(req.params.id, req.body, {new:true})
         res.status(200).json(updatedTrack)
+})
 
+
+
+const changeLike = asyncHandler(async (req,res)=>{
+    try {
+        const track = await Track.findById(req.params.id)
+        if (req.body.like===true){
+            req.user.liked.push(track._id);
+            const likes = ++track.numOfLks;
+            await User.updateOne({_id:req.user._id}, {$set:{liked:req.user.liked}})
+            await Track.updateOne({_id:track._id}, {$set:{numOfLks:likes}})
+            res.status(202).json(track.select('-comments'))
+        }
+        if(req.body.like===false){
+            const newLiked = req.user.liked.filter(id => id.toString()!==track._id.toString())
+            await User.updateOne({_id:req.user._id}, {$set:{liked:newLiked}})
+            const likes = --track.numOfLks;
+            await Track.updateOne({_id:track._id}, {$set:{numOfLks:likes}})
+            res.status(202).json(track.select('-comments'))
+        }
+    }catch (e) {
+        res.status(400)
+        throw new Error(e)
+    }
+})
+
+const addView = asyncHandler(async (req,res)=>{
+    try{
+        console.log(132312)
+        const track = await Track.findById(req.params.id).select('-comments')
+        await Track.updateOne({_id:track._id}, {$set:{numOfAud: ++track.numOfAud}})
+        console.log(track)
+        res.status(202).json(track)
+    }catch (e) {
+        res.status(400)
+        console.log(e)
+        throw new Error(e)
+    }
+
+})
+
+const getComments = asyncHandler(async (req,res)=>{
+    try {
+        const track = await Track.findById(req.params.id)
+        res.status(202).json(track.comments.items)
+    }catch (e) {
+        res.status(400)
+        throw new Error(e)
+    }
+})
+
+
+const addComments = asyncHandler(async (req,res)=>{
+    try {
+        const track = await Track.findById(req.params.id)
+        const items = [...track.comments.items]
+        items.push(req.body)
+        console.log(items)
+        await Track.updateOne({_id:req.params.id}, {$set:{comments:{items}}})
+        res.status(202).json(req.body)
+    }catch (e){
+        res.status(400)
+        throw new Error(e)
+        console.log(e)
+    }
 })
 
 
@@ -71,5 +140,9 @@ module.exports = {
     addTrack,
     getTracks,
     deleteTrack,
-    putTrack
+    putTrack,
+    changeLike,
+    addView,
+    getComments,
+    addComments
 }

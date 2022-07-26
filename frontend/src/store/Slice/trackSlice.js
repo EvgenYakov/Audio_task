@@ -5,10 +5,12 @@ import trackService from "../actions/trackService";
 // Get user from localStorage
 const initialState = {
     tracks: [],
+    comments:[],
     isError: false,
     isSuccess: false,
     isLoading: false,
     message: '',
+    viewAdded:false
 }
 
 export const addTrack = createAsyncThunk(
@@ -32,8 +34,10 @@ export const getTracks = createAsyncThunk(
     'music/get',
     async (_,thunkAPI)=>{
         try{
-            return await trackService.getTracks()
+            const token = thunkAPI.getState().auth.user ? thunkAPI.getState().auth.user.token : null;
+            return await trackService.getTracks(token)
         }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
                 e.message ||
@@ -79,12 +83,78 @@ export const updateTrack = createAsyncThunk(
     }
 )
 
+export const service = createAsyncThunk(
+    'music/onLike',
+    async (trackData, thunkAPI)=>{
+        try{
+            const token = thunkAPI.getState().auth.user.token;
+            return await trackService.service(trackData,token)
+        }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
+            const mes =
+                (e.response && e.response.data && e.response.data.message) ||
+                e.message ||
+                e.toString()
+            return thunkAPI.rejectWithValue(mes)
+        }
+    }
+)
+
+export const addView = createAsyncThunk(
+    'music/addView',
+    async (id, thunkAPI)=>{
+        try{
+            return await trackService.addView(id)
+        }catch (e) {
+            const mes =
+                (e.response && e.response.data && e.response.data.message) ||
+                e.message ||
+                e.toString()
+            return thunkAPI.rejectWithValue(mes)
+        }
+    }
+)
+
+export const getComments = createAsyncThunk(
+    'music/getComments',
+    async (id, thunkAPI)=>{
+        try{
+            return await trackService.getComments(id)
+        }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
+            const mes =
+                (e.response && e.response.data && e.response.data.message) ||
+                e.message ||
+                e.toString()
+            return thunkAPI.rejectWithValue(mes)
+        }
+    }
+)
+
+
+export const addComment = createAsyncThunk(
+    'music/addComment',
+    async (commData, thunkAPI)=>{
+        try{
+            const token = thunkAPI.getState().auth.user.token;
+            return await trackService.addComments(commData,token)
+        }catch (e) {
+            if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
+            const mes =
+                (e.response && e.response.data && e.response.data.message) ||
+                e.message ||
+                e.toString()
+            return thunkAPI.rejectWithValue(mes)
+        }
+    }
+)
 
 export const trackSlice = createSlice({
     name:'audio',
     initialState,
     reducers:{resetTrack:(state)=> {
                 state.tracks= []
+                state.comments = []
                 state.isError=  false
                 state.isSuccess=  false
                 state.isLoading=  false
@@ -142,6 +212,27 @@ export const trackSlice = createSlice({
             state.isError = true
             state.message = action.payload
         })
+            .addCase(service.fulfilled, (state,action)=>{
+                state.tracks.splice(state.tracks.findIndex(obj=>obj._id===action.payload._id),1,action.payload)
+            })
+            .addCase(addView.fulfilled, (state,action)=>{
+                state.viewAdded = true
+                state.tracks.splice(state.tracks.findIndex(obj=>obj._id===action.payload._id),1,action.payload)
+            })
+            .addCase(addView.pending, (state,action)=>{
+                state.viewAdded = false
+            })
+            .addCase(getComments.fulfilled, (state,action)=>{
+                state.comments = action.payload
+                state.isLoading = false
+                state.isSuccess = true
+            })
+            .addCase(getComments.pending,(state)=>{
+                state.isLoading = true;
+            })
+            .addCase(addComment.fulfilled,(state,action)=>{
+                state.comments.push(action.payload)
+            })
     }
 })
 

@@ -22,6 +22,58 @@ const protect = asyncHandler(async (req,res,next)=>{
     }
 })
 
+
+const protectAdmin = asyncHandler(async (req,res,next)=>{
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+        try {
+            token = req.headers.authorization.split(' ')[1]
+            const decoded = jwt.verify(token, process.env.SECRET)
+            req.user = await User.findById(decoded.id).select('-password')
+        }catch (e) {
+            console.log(e)
+            res.status(401)
+            throw new Error('Вы не авторизованы')
+        }
+        if (req.user.role === "admin")
+            next()
+        else {
+            res.status(403)
+            throw new Error('Нехватает прав')
+        }
+    }
+    if (!token) {
+        res.status(401)
+        throw new Error('Вы не авторизованы, токена нет')
+    }
+
+})
+
+
+const protectGuest = asyncHandler(async (req,res,next)=>{
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
+        try {
+            token = req.headers.authorization.split(' ')[1]
+            if (token==="null") {
+                res.status(401)
+                req.user = "guest"
+                next()
+                return
+            }
+            const decoded = jwt.verify(token, process.env.SECRET)
+            req.user = await User.findById(decoded.id).select('-password')
+            next()
+        }catch (e) {
+            console.log(e)
+            res.status(401)
+            throw new Error('Вы не авторизованы')
+        }
+    }
+})
+
 module.exports = {
-    protect
+    protect,
+    protectAdmin,
+    protectGuest
 }

@@ -11,7 +11,7 @@ export default function ControlsForUser(props){
     return(
         <>
             {
-                props.activeTrack===props.index ?
+                props.activeTrack===track._id ?
                     <></>
                     : <button
                         aria-label="Play"
@@ -42,7 +42,7 @@ export default function ControlsForUser(props){
                         style={{
                             border: 'none',
                             cursor: 'pointer'}}
-                        onClick={()=>props.onDisLike(track)}
+                        onClick={()=>props.onDisLike(track._id)}
                     >
                         <HeartOn/>
                     </button>
@@ -53,7 +53,7 @@ export default function ControlsForUser(props){
                         style={{
                             border: 'none',
                             cursor: 'pointer'}}
-                        onClick={()=>props.onLike(track)}
+                        onClick={()=>props.onLike(track._id)}
                     >
                         <HeartOff/>
                     </button>
