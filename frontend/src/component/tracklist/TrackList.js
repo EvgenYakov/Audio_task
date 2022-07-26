@@ -43,7 +43,7 @@ function TrackList(props){
                             {location.pathname === "/" ?
                                     <>
                                         {
-                                            props.activeTrack===track._id ?
+                                            props.activeTrack.fileId===track.fileId ?
                                                 <></>
                                                 : <button
                                                     aria-label="Play"
@@ -51,7 +51,7 @@ function TrackList(props){
                                                     style={{
                                                         border: 'none',
                                                         cursor: 'pointer'}}
-                                                    onClick={()=>props.playTrack(track._id)}
+                                                    onClick={()=>props.playTrack(track.fileId,index)}
                                                 >
                                                     <Play/>
                                                 </button>
@@ -75,7 +75,7 @@ function TrackList(props){
                                                     <ControlsForAdmin track={track} delTrack={props.delTrack} changeForm={props.changeForm}/>
                                                     :
                                                     <ControlsForUser track = {track} user={user} onLike={props.onLike} playTrack={props.playTrack}
-                                                                     onDisLike={props.onDisLike} activeTrack={props.activeTrack}/>
+                                                                     onDisLike={props.onDisLike} index={index} activeTrack={props.activeTrack}/>
                                                  }
                                             </>
                                         )

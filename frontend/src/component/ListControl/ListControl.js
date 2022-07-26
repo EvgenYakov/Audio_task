@@ -25,12 +25,14 @@ export default function ListControl(props){
 
     const onAll = ()=>{
         props.setActiveTracks(tracks)
+        props.setActiveTrack({
+            index:0,
+            fileId:tracks[0].fileId}
+        );
     }
 
     const onSubSearch = (e)=>{
         e.preventDefault();
-        console.log(tracks)
-        console.log(searchVal)
         const searchList = [...tracks].filter((track)=> (
             track.label.match(new RegExp(`${searchVal}`,'gi')) ||
             track.author.match(new RegExp(`${searchVal}`,'gi'))
@@ -40,8 +42,12 @@ export default function ListControl(props){
             return 0;
         }
         props.setActiveTracks(searchList);
-        props.setActiveTrack(searchList[0]._id);
+        props.setActiveTrack({
+            index:0,
+            fileId:searchList[0].fileId}
+        );
     }
+
     return(
         <div className="listControls">
             <div className="btn-group m-1">
@@ -51,7 +57,7 @@ export default function ListControl(props){
             </div>
             <form className="d-flex m-1" onSubmit={(e)=>onSubSearch(e)}>
                 <input className="form-control me-2 opacity-75" type="search" placeholder="Поиск трека" value={searchVal} onChange={(e)=>{setSearchVal(e.target.value)}} aria-label="Search"/>
-                <button className="btn btn-outline-light m-0" type="submit">Search</button>
+                <button className="btn btn-outline-light m-0" type="submit">Поиск</button>
             </form>
         </div>
     )

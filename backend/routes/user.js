@@ -5,7 +5,7 @@ const router = require('express').Router();
 
 
 router.route('/').get(protectAdmin,getUsers).post(protectAdmin,addUser)
-router.route('/:id').put(protect,putUser).delete(protectAdmin,deleteUser)
+router.route('/:id').put(protectAdmin,putUser).delete(protectAdmin,deleteUser)
 
 
 module.exports = router

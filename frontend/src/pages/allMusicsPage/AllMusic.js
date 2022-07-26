@@ -7,7 +7,7 @@ import ModalAdd from "./modalForms/add/modalAdd";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {logout, putUser} from "../../store/Slice/AuthSlice";
-import {getTracks, updateTrack, resetTrack, service, addView} from "../../store/Slice/trackSlice";
+import {getTracks,  resetTrack,  addView, changeLike} from "../../store/Slice/trackSlice";
 import {useNavigate} from "react-router-dom";
 import Spinner from "../../component/Spinner/Spinner";
 import PlayerFooter from "../../component/playerFoot/player";
@@ -20,7 +20,7 @@ import ListControl from "../../component/ListControl/ListControl";
      const dispatch = useDispatch()
      const navigate = useNavigate();
      const [actTracks, setActiveTracks] = useState([])
-     const [activeTrack, setActiveTrack] = useState(0)
+     const [activeTrack, setActiveTrack] = useState({})
      const [modalActive,setModalActive]=useState(false)
      const modalEdit = useRef(null);
 
@@ -82,13 +82,18 @@ import ListControl from "../../component/ListControl/ListControl";
          if (tracks.length){
              setActiveTracks(JSON.parse(JSON.stringify(tracks)));
              setActiveTrack(tracks[0]._id)
+             setActiveTrack({
+                 index:0,
+                 fileId:tracks[0].fileId
+             })
          }
      }, [isSuccess])
 
 
      useEffect(()=>{
-         if(activeTrack && tracks.length){
-             dispatch(addView(activeTrack))
+         if(Object.keys(activeTrack).length && tracks.length){
+             const track = tracks.find(track=>track.fileId===activeTrack.fileId)
+             dispatch(addView(track._id))
          }
      },[activeTrack])
 
@@ -99,26 +104,38 @@ import ListControl from "../../component/ListControl/ListControl";
          }
      },[viewAdded])
 
-    const playTrack= (id)=>{
-            setActiveTrack(id)
+    const playTrack= (fileId,index)=>{
+            setActiveTrack({
+                index,
+                fileId
+            })
      }
 
      const changeActiveTrack=(id)=>{
-         if (id !== activeTrack)
-            setActiveTrack(id)
+         const track = tracks.find(track=>track._id===id)
+            setActiveTrack({
+                index:0,
+                fileId:track.fileId
+            })
      }
 
      const onPlaylist = (tracksId)=>{
          const active = tracks.filter(track => tracksId.includes(track._id));
          setActiveTracks(active)
-         if (active[0]._id !== activeTrack)
-         setActiveTrack(active[0]._id);
+         if(active[0].fileId !== activeTrack.fileId  || activeTrack.index!==0)
+             setActiveTrack({
+                 index:0,
+                 fileId:active[0].fileId}
+             );
      }
+
      const onLiked = ()=>{
          const trks = tracks.filter(track=>user.liked.find(id=>track._id===id))
          setActiveTracks(trks)
-         if (trks[0]._id !== activeTrack)
-           setActiveTrack(trks[0]._id);
+         if(trks[0].fileId !== activeTrack.fileId || activeTrack.index!==0)
+           setActiveTrack({
+               index:0,
+               fileId:trks[0].fileId});
      }
 
      const onLike = (_id)=>{
@@ -131,7 +148,7 @@ import ListControl from "../../component/ListControl/ListControl";
          newLiked.push(_id)
          newUser.liked = newLiked;
          dispatch(putUser(newUser))
-         dispatch(service(trackData))
+         dispatch(changeLike(trackData))
      }
      const onDisLike = (_id)=>{
          const newLiked = [...user.liked].filter(id=>id!==_id)
@@ -142,12 +159,35 @@ import ListControl from "../../component/ListControl/ListControl";
          }
          newUser.liked = newLiked;
          dispatch(putUser(newUser))
-         dispatch(service(trackData))
+         dispatch(changeLike(trackData))
      }
 
-     const onAud = (id) => {
 
-         dispatch(addView(id))
+     function toPrevTrack (){
+         const activeTracks = [...actTracks]
+         const actTrack = {...activeTrack}
+         console.log()
+         if (actTrack.index - 1 < 0){
+             actTrack.index =activeTracks.length-1;
+             actTrack.fileId = activeTracks[actTrack.index].fileId;
+         }else {
+             actTrack.index--;
+             actTrack.fileId = activeTracks[actTrack.index].fileId;
+         }
+         setActiveTrack(actTrack)
+     }
+
+     function toNextTrack(){
+         const activeTracks = [...actTracks]
+         const actTrack = {...activeTrack}
+         if (actTrack.index < tracks.length - 1 ){
+             ++actTrack.index;
+             actTrack.fileId = activeTracks[actTrack.index].fileId;
+         } else {
+             actTrack.index=0;
+            actTrack.fileId = activeTracks[actTrack.index].fileId;
+         }
+         setActiveTrack(actTrack)
      }
 
     return (
@@ -174,7 +214,8 @@ import ListControl from "../../component/ListControl/ListControl";
 
             {actTracks.length === 0 || !activeTrack ?
                 <></> :
-                <PlayerFooter tracks={actTracks} activeTrack={activeTrack} onAud={onAud} changeTrack={changeActiveTrack}/>
+                <PlayerFooter activeTrack={activeTrack} changeTrack={changeActiveTrack}
+                              toPrevTrack={toPrevTrack} toNextTrack={toNextTrack}/>
             }
         </div>
     )

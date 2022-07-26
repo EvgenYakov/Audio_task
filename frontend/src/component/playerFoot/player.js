@@ -3,70 +3,48 @@ import Controls from "./controls/controls";
 import {useState, useEffect, useRef, useLayoutEffect} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {ReactComponent as Music} from "../../assets/music.svg";
+import {useSelector} from "react-redux";
 
 
 
-export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
+export default function PlayerFooter({activeTrack,toNextTrack,toPrevTrack}){
     const location = useLocation();
     const navigate = useNavigate();
     const [trProgress, setTrProgress] = useState(0);
     const [trPlaying, setTrPlaying] = useState(false);
-    const [trIn, setTrIn] = useState(0);
-    //const {fileId} = tracks[trIn];
-    const [complete,setComplete] = useState(false);
+    const [complete,setComplete] = useState(true);
     const [volume,setVolume] = useState(1)
     const isReady = useRef(false);
     const intervalRef = useRef();
     const audioRef = useRef( new Audio());
     const {duration} = audioRef.current
- //   const tracks= props.tracks ? JSON.parse(JSON.stringify(tracks)) : [];
-    const [plTracks,setPlTracks] = useState([])
+    const [track,setTrack] = useState({})
 
     const curPos = duration ? `${(trProgress / duration) * 100}%` : '0%';
     const trackStyle = `
      -webkit-gradient(linear, 0% 0%, 100% 0%, color-stop(${curPos}, #fff), color-stop(${curPos}, #777))
      `;
-    useEffect(() => {
-            audioRef.current.pause();
-            const index =tracks.findIndex((track)=>track._id===activeTrack)
-            console.log(activeTrack)
-            if (index!==trIn ){
-                console.log(index)
-                console.log(2222)
 
-                setTrIn(index)
-            }
+    const {tracks}=useSelector((state) => {
+        return state.track
+    })
+
+    useEffect(() => {
+            audioRef.current.src ="/stream/"+activeTrack.fileId
+            audioRef.current.pause();
+            setComplete(false);
+            setTrProgress(audioRef.current.currentTime)
+            audioRef.current.addEventListener("canplay", completeCheck)
+            const track = tracks.find(track=>track.fileId===activeTrack.fileId)
+            setTrack({...track})
         },
     [activeTrack] )
 
-    useEffect(() => {
-        const index =tracks.findIndex((track)=>track._id===activeTrack)
-            if(index>tracks.length-1){
-       console.log(tracks)
-               setTrIn(0);
-           }
-            isReady.current = false;
-        }, [tracks] )
 
     useEffect(()=>{
         audioRef.current.removeEventListener("canplay",completeCheck)
     },[navigate])
 
-    function toPrevTrack (){
-        if (trIn - 1 < 0){
-            setTrIn(tracks.length-1);
-        }else {
-            setTrIn(trIn - 1)
-        }
-    }
-
-    function toNextTrack (){
-        if (trIn < tracks.length - 1 ){
-            setTrIn(trIn + 1 )
-        } else {
-            setTrIn(0)
-        }
-    }
 
      function startTimer(){
          clearInterval(intervalRef.current);
@@ -95,10 +73,12 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
     },[volume])
 
     useEffect(() => {
-        audioRef.current.src = '/stream/'+tracks[trIn].fileId
+        audioRef.current.src = '/stream/'+activeTrack.fileId
+        setComplete(true);
         return () => {
             audioRef.current.pause();
             clearInterval(intervalRef.current);
+            audioRef.current.removeEventListener("canplay",completeCheck)
         }
     }, []);
 
@@ -124,16 +104,6 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
         }
         audioRef.current.removeEventListener("canplay",completeCheck)
     }
-
-    useEffect(()=>{
-        const index =tracks.findIndex((track)=>track._id===activeTrack)
-        audioRef.current.src ="/stream/"+tracks[trIn].fileId
-        audioRef.current.pause();
-        setComplete(false);
-        changeTrack(tracks[trIn]._id);
-        setTrProgress(audioRef.current.currentTime)
-        audioRef.current.addEventListener("canplay", completeCheck)
-    },[trIn,tracks])
 
 
     function onScrub(value){
@@ -171,13 +141,13 @@ export default function PlayerFooter({tracks,activeTrack,changeTrack,onAud}){
                         toPrevTrack={toPrevTrack}
                         setPlay={setTrPlaying}
                     />
-                    {tracks[trIn].url ?  <img src={tracks[trIn].url} className="small-img playerImg"/> : <Music className="small-img playerImg"/>}
+                    {track.url ?  <img src={track.url} className="small-img playerImg"/> : <Music className="small-img playerImg"/>}
                     <div style={{margin:"0 20px"}}>
                         <p className="m-0">
-                            {tracks[trIn].label}
+                            {track.label}
                         </p>
                         <p className="m-0 fw-light">
-                            {tracks[trIn].author}
+                            {track.author}
                         </p>
                     </div>
                     {

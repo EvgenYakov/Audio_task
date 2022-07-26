@@ -5,7 +5,7 @@ import trackService from "../actions/trackService";
 // Get user from localStorage
 const initialState = {
     tracks: [],
-    comments:[],
+    infoOneTrack:{},
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -83,12 +83,12 @@ export const updateTrack = createAsyncThunk(
     }
 )
 
-export const service = createAsyncThunk(
+export const changeLike = createAsyncThunk(
     'music/onLike',
     async (trackData, thunkAPI)=>{
         try{
             const token = thunkAPI.getState().auth.user.token;
-            return await trackService.service(trackData,token)
+            return await trackService.changeLike(trackData,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
@@ -115,11 +115,11 @@ export const addView = createAsyncThunk(
     }
 )
 
-export const getComments = createAsyncThunk(
-    'music/getComments',
+export const getTrack = createAsyncThunk(
+    'music/getTrack',
     async (id, thunkAPI)=>{
         try{
-            return await trackService.getComments(id)
+            return await trackService.getTrack(id)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
@@ -212,7 +212,7 @@ export const trackSlice = createSlice({
             state.isError = true
             state.message = action.payload
         })
-            .addCase(service.fulfilled, (state,action)=>{
+            .addCase(changeLike.fulfilled, (state,action)=>{
                 state.tracks.splice(state.tracks.findIndex(obj=>obj._id===action.payload._id),1,action.payload)
             })
             .addCase(addView.fulfilled, (state,action)=>{
@@ -222,16 +222,23 @@ export const trackSlice = createSlice({
             .addCase(addView.pending, (state,action)=>{
                 state.viewAdded = false
             })
-            .addCase(getComments.fulfilled, (state,action)=>{
-                state.comments = action.payload
+            .addCase(getTrack.fulfilled, (state,action)=>{
+                state.track = action.payload
                 state.isLoading = false
                 state.isSuccess = true
             })
-            .addCase(getComments.pending,(state)=>{
+            .addCase(getTrack.pending,(state)=>{
                 state.isLoading = true;
+                state.isSuccess = false;
             })
             .addCase(addComment.fulfilled,(state,action)=>{
-                state.comments.push(action.payload)
+                state.track = action.payload
+                state.isSuccess = true
+                state.isLoading = false;
+            })
+            .addCase(addComment.pending,(state,action)=>{
+                state.isLoading = true;
+                state.isSuccess = false;
             })
     }
 })

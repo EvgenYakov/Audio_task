@@ -17,11 +17,6 @@ export default function Home(){
     const [actTracks, setActiveTracks] = useState([])
     const [activeTrack, setActiveTrack] = useState(0)
 
-    const changeActiveTrack=(id)=>{
-        if (id !== activeTrack)
-            setActiveTrack(id)
-    }
-
     const {tracks, isLoading, isError, isSuccess, message,viewAdded} = useSelector(
         (state) => {
             return state.track
@@ -62,14 +57,17 @@ export default function Home(){
     useEffect(() => {
         if (tracks.length){
             setActiveTracks(JSON.parse(JSON.stringify(tracks)));
-            setActiveTrack(tracks[0]._id)
+            setActiveTrack({
+                index:0,
+                fileId:tracks[0].fileId
+            })
         }
-
     }, [isSuccess])
 
     useEffect(()=>{
         if(activeTrack && tracks.length){
-            dispatch(addView(activeTrack))
+            const track = tracks.find(track=>track.fileId===activeTrack.fileId)
+            dispatch(addView(track._id))
         }
     },[activeTrack])
 
@@ -80,13 +78,47 @@ export default function Home(){
         }
     },[viewAdded])
 
-    const playTrack= (id)=>{
-        setActiveTrack(id)
+
+    const playTrack= (fileId,index)=>{
+        setActiveTrack({
+            index,
+            fileId
+        })
     }
 
-    const onAud = (id) => {
-        //actTracks[activeTrack].numOfAud++;
-        dispatch(addView(id))
+    const changeActiveTrack=(id)=>{
+        const track = tracks.find(track=>track._id===id)
+        setActiveTrack({
+            index:0,
+            fileId:track.fileId
+        })
+    }
+
+    function toPrevTrack (){
+        const activeTracks = [...actTracks]
+        const actTrack = {...activeTrack}
+        console.log()
+        if (actTrack.index - 1 < 0){
+            actTrack.index =activeTracks.length-1;
+            actTrack.fileId = activeTracks[actTrack.index].fileId;
+        }else {
+            actTrack.index--;
+            actTrack.fileId = activeTracks[actTrack.index].fileId;
+        }
+        setActiveTrack(actTrack)
+    }
+
+    function toNextTrack(){
+        const activeTracks = [...actTracks]
+        const actTrack = {...activeTrack}
+        if (actTrack.index < tracks.length - 1 ){
+            ++actTrack.index;
+            actTrack.fileId = activeTracks[actTrack.index].fileId;
+        } else {
+            actTrack.index=0;
+            actTrack.fileId = activeTracks[actTrack.index].fileId;
+        }
+        setActiveTrack(actTrack)
     }
 
     return (
@@ -107,7 +139,8 @@ export default function Home(){
 
             {actTracks.length === 0 ?
                 <></> :
-                <PlayerFooter tracks={actTracks} activeTrack={activeTrack} onAud={onAud} changeTrack={changeActiveTrack}/>
+                <PlayerFooter activeTrack={activeTrack} changeTrack={changeActiveTrack}
+                              toPrevTrack={toPrevTrack} toNextTrack={toNextTrack}/>
             }
         </div>
     )

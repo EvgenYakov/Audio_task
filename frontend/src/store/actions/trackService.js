@@ -54,7 +54,7 @@ export async function updateTrack(trackData,token){
     return response.data
 }
 
-export async function service(trackData,token){
+export async function changeLike(trackData,token){
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -66,8 +66,8 @@ export async function service(trackData,token){
 }
 
 
-export async function getComments(id){
-    const response = await axios.get('/music/comments/'+id)
+export async function getTrack(id){
+    const response = await axios.get('/music/track/'+id)
     return response.data
 }
 
@@ -92,8 +92,8 @@ const trackService = {
     getTracks,
     deleteTrack,
     updateTrack,
-    service,
-    getComments,
+    changeLike,
+    getTrack,
     addComments,
     addView
 }

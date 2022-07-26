@@ -11,7 +11,7 @@ export default function ControlsForUser(props){
     return(
         <>
             {
-                props.activeTrack===track._id ?
+                props.activeTrack.fileId===track.fileId ?
                     <></>
                     : <button
                         aria-label="Play"
@@ -19,7 +19,7 @@ export default function ControlsForUser(props){
                         style={{
                             border: 'none',
                             cursor: 'pointer'}}
-                        onClick={()=>props.playTrack(track._id)}
+                        onClick={()=>props.playTrack(track.fileId,props.index)}
                     >
                         <Play/>
                     </button>
@@ -30,7 +30,7 @@ export default function ControlsForUser(props){
                 style={{
                     border: 'none',
                     cursor: 'pointer'}}
-                onClick={()=>{navigate("/music/"+track._id, {state:{track}})}}
+                onClick={()=>{navigate("/music/"+track._id, {state:{id:props.track._id}})}}
             >
                 <Page/>
             </button>

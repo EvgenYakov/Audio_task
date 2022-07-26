@@ -4,15 +4,19 @@ import {ReactComponent as Heart} from "../../../assets/heartOff.svg";
 import Accordion from "../../../component/accordion/accordion";
 import './playlist.css'
 import {useSelector} from "react-redux";
+import {useState} from "react";
 
 
 export default function PlayList(props){
     const playlists = [...props.playlists]
+    const [actPlaylist,setActPlaylist] = useState(null)
     const {user} = useSelector(
         (state) => {
             return state.auth
         }
     )
+
+
 
     return(
        <Accordion>
@@ -21,9 +25,10 @@ export default function PlayList(props){
                    return(
                    <div className="col" key={index} >
                            <div className="card bg-dark bg-opacity-50 ">
-                               <div onClick={()=>props.onPlaylist(plst.tracks)}>
-                                   {plst.url==="" ? <EmptyImg className="card-img-top"/> : <img src={plst.url} className="plstImg" alt="..."/>}
-                               </div>
+
+                                   <div onClick={()=>props.onPlaylist(plst.tracks)}>
+                                       {plst.url==="" ? <EmptyImg className="card-img-top "/> : <img src={plst.url} className="plstImg" alt="..."/>}
+                                   </div>
                                {
                                    plst.category===false || user.role==='admin' ?
                                      <div className="changTitle change-card card-body ">
@@ -48,7 +53,7 @@ export default function PlayList(props){
            <div className="col">
                <div className="card bg-dark bg-opacity-50 ">
                    <div onClick={props.onLiked}>
-                       <Heart className="card-img-top"/>
+                           <Heart className="card-img-top "/>
                    </div>
                    <div className="card-body">
                            <h5 className="card-title">Любимые</h5>

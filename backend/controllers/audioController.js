@@ -3,7 +3,18 @@ const mongodb = require('mongodb')
 const {Types} = require("mongoose");
 const Track = require("../models/music");
 const User = require("../models/user");
+const {MongoClient} = require("mongodb");
 const ObjectId = require('mongodb').ObjectId;
+
+let db;
+const mongoURI = "mongodb+srv://evgen:aUAqEDC8PmmgW6rE@cluster1.agwws.mongodb.net/audio_task?retryWrites=true&w=majority";
+MongoClient.connect(mongoURI, (err, client) => {
+    if (err) {
+        console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
+        process.exit(1);
+    }
+    db = client.db('audios');
+});
 
 
 
@@ -34,14 +45,15 @@ const deleteTrack = asyncHandler(async (req,res)=>{
     try {
         const track = await Track.findById(req.params.id);
         if (!track) {
-            res.status(400)
+            res.status(404)
             throw new Error('Такой песни уже нет')
         }
         await new mongodb.GridFSBucket(db).delete(track.fileId)
         await track.remove();
         res.status(200).json({ id: req.params.id })
     }catch (e) {
-        console.log(e)
+        res.status(400)
+        throw new Error(e)
     }
 })
 
@@ -56,14 +68,6 @@ const putTrack = asyncHandler(async (req,res)=>{
         if (!req.user) {
             res.status(401)
             throw new Error('User not found')
-        }
-        if(track.numOfLks<req.body.numOfLks){
-            req.user.liked.push(track._id);
-            await User.updateOne({_id:req.user._id}, {$set:{liked:req.user.liked}})
-        }
-        if(track.numOfLks>req.body.numOfLks){
-            const newLiked = [...req.user.liked].filter(id => id.toString()!==track._id.toString())
-            await User.updateOne({_id:req.user._id}, {$set:{liked:newLiked}})
         }
         const updatedTrack= await Track.findByIdAndUpdate(req.params.id, req.body, {new:true})
         res.status(200).json(updatedTrack)
@@ -96,10 +100,8 @@ const changeLike = asyncHandler(async (req,res)=>{
 
 const addView = asyncHandler(async (req,res)=>{
     try{
-        console.log(132312)
         const track = await Track.findById(req.params.id).select('-comments')
         await Track.updateOne({_id:track._id}, {$set:{numOfAud: ++track.numOfAud}})
-        console.log(track)
         res.status(202).json(track)
     }catch (e) {
         res.status(400)
@@ -109,10 +111,10 @@ const addView = asyncHandler(async (req,res)=>{
 
 })
 
-const getComments = asyncHandler(async (req,res)=>{
+const getTrack = asyncHandler(async (req,res)=>{
     try {
         const track = await Track.findById(req.params.id)
-        res.status(202).json(track.comments.items)
+        res.status(202).json(track)
     }catch (e) {
         res.status(400)
         throw new Error(e)
@@ -125,13 +127,12 @@ const addComments = asyncHandler(async (req,res)=>{
         const track = await Track.findById(req.params.id)
         const items = [...track.comments.items]
         items.push(req.body)
-        console.log(items)
-        await Track.updateOne({_id:req.params.id}, {$set:{comments:{items}}})
-        res.status(202).json(req.body)
+        const upTrack = await Track.findByIdAndUpdate({_id:req.params.id}, {comments:{items}},{new:true})
+        res.status(202).json(upTrack)
     }catch (e){
+        console.log(e)
         res.status(400)
         throw new Error(e)
-        console.log(e)
     }
 })
 
@@ -143,6 +144,6 @@ module.exports = {
     putTrack,
     changeLike,
     addView,
-    getComments,
+    getTrack,
     addComments
 }
