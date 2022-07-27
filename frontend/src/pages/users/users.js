@@ -12,6 +12,8 @@ import {useRef, useState} from "react";
 import ModalUserAdd from "./Modals/ModalUserAdd";
 import ModalUserEdit from "./Modals/ModalUserEdit";
 import Spinner from "../../component/Spinner/Spinner";
+import {resetTrack} from "../../store/Slice/trackSlice";
+import {resetPLaylist} from "../../store/Slice/PlaylistSlice";
 
 
 export default function Users(props){
@@ -36,6 +38,8 @@ export default function Users(props){
         if (isError) {
             if (message===401) {
                 toast.error("Время сеанса истекло")
+                dispatch(resetTrack())
+                dispatch(resetPLaylist())
                 dispatch(resetUser())
                 dispatch(logout())
                 navigate('/auth')
