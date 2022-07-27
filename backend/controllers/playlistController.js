@@ -43,38 +43,56 @@ const getPlaylist = asyncHandler(async (req,res)=>{
 })
 
 const putPlaylist = asyncHandler(async (req,res)=>{
-    try {
         const plist = await Playlist.findById(req.params.id)
         if (!plist) {
             res.status(400)
-            throw new Error('Track not found')
+            throw new Error('plist not found')
         }
-
         if (!req.user) {
             res.status(401)
             throw new Error('User not found')
         }
-
-        const updatedPlist= await Playlist.findByIdAndUpdate(req.params.id, req.body, {new:true})
+        let updatedPlist;
+        if(plist.category){
+            if(req.user.role === "admin")
+                updatedPlist= await Playlist.findByIdAndUpdate(req.params.id, req.body, {new:true})
+            else{
+                res.status(403)
+                throw new Error('Forbidden')
+            }
+        } else {
+            updatedPlist= await Playlist.findByIdAndUpdate(req.params.id, req.body, {new:true})
+        }
         res.status(200).json(updatedPlist)
-    }catch (e) {
-        console.log(e)
-    }
-
 })
 
 const deletePlaylist = asyncHandler(async (req,res)=>{
-    try {
         const plst = await Playlist.findById(req.params.id);
         if (!plst) {
             res.status(400)
             throw new Error('Такого плейлиста уже нет')
         }
-        await plst.remove();
+        try {
+            const newPlst = req.user.playlists.filter(pl=>pl.toString()!==req.params.id.toString());
+            if(plst.category){
+                if(req.user.role === "admin"){
+                    await User.findByIdAndUpdate(req.user._id, {playlists:newPlst}, {new:true})
+                    await plst.remove();
+                }
+                else{
+                    res.status(403)
+                    throw new Error('Forbidden')
+                }
+            } else {
+                await User.findByIdAndUpdate(req.user._id, {playlists:newPlst}, {new:true})
+                await plst.remove();
+            }
+        }catch (e) {
+            throw new Error(e)
+        }
+
         res.status(200).json({ id: req.params.id })
-    }catch (e) {
-        console.log(e)
-    }
+
 })
 
 

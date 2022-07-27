@@ -134,7 +134,7 @@ export const playlistSlice = createSlice({
             .addCase(deletePlaylist.fulfilled, (state, action) => {
                 state.isPlstLoading = false
                 state.isPlstSuccess = true
-                state.playlists = state.playlists.filter((track)=> track._id !== action.payload.id)
+                state.playlists = state.playlists.filter((plst)=> plst._id !== action.payload.id)
             })
             .addCase(deletePlaylist.rejected, (state, action) => {
                 state.isPlstLoading = false
