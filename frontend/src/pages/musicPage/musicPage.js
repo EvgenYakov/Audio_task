@@ -32,7 +32,8 @@ export default function MusicPage(props){
     )
 
     useEffect(() => {
-        dispatch(getTrack(location.state.id))
+
+        dispatch(getTrack(location.pathname.split("/")[2]))
         return () => {
             dispatch(resetTrack())
         }

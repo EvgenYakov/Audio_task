@@ -62,7 +62,7 @@ function TrackList(props){
                                             style={{
                                                 border: 'none',
                                                 cursor: 'pointer'}}
-                                            onClick={()=>{navigate("/music/"+track._id, {state:{id:track._id}})}}
+                                            onClick={()=>{navigate("/music/"+track._id)}}
                                         >
                                             <Page/>
                                         </button>
