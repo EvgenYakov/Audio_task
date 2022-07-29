@@ -32,7 +32,6 @@ export default function MusicPage(props){
     )
 
     useEffect(() => {
-        console.log(location.state)
         dispatch(getTrack(location.state.id))
         return () => {
             dispatch(resetTrack())
@@ -41,8 +40,7 @@ export default function MusicPage(props){
 
 
     useEffect(() => {
-        if(isSuccess === true){
-            console.log(track)
+        if(isSuccess === true && track){
             setTrackPage(track)
         }
     }, [isSuccess])

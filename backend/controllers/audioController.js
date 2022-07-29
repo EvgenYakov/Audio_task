@@ -77,22 +77,23 @@ const putTrack = asyncHandler(async (req,res)=>{
 
 const changeLike = asyncHandler(async (req,res)=>{
     try {
-        const track = await Track.findById(req.params.id)
+        const track = await Track.findById(req.params.id).select('-comments')
         if (req.body.like===true){
             req.user.liked.push(track._id);
             const likes = ++track.numOfLks;
             await User.updateOne({_id:req.user._id}, {$set:{liked:req.user.liked}})
             await Track.updateOne({_id:track._id}, {$set:{numOfLks:likes}})
-            res.status(202).json(track.select('-comments'))
+            res.status(202).json(track)
         }
         if(req.body.like===false){
             const newLiked = req.user.liked.filter(id => id.toString()!==track._id.toString())
             await User.updateOne({_id:req.user._id}, {$set:{liked:newLiked}})
             const likes = --track.numOfLks;
             await Track.updateOne({_id:track._id}, {$set:{numOfLks:likes}})
-            res.status(202).json(track.select('-comments'))
+            res.status(202).json(track)
         }
     }catch (e) {
+        console.log(e)
         res.status(400)
         throw new Error(e)
     }
