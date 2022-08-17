@@ -1,29 +1,35 @@
+@import "./../../styles/mixins.scss";
+
+$color_footer:rgba(0, 0, 0, 0.99);
+$color_text_footer:#fafaff;
+$range_color: #3b7677;
+
 .playFoot{
-    background-color: rgba(0, 0, 0, 0.99);
+    background-color: $color_footer;
     position: fixed;
+    text-align: center;
     right: 0;
     bottom: 0;
-    text-align: center;
     width: 100%;
     font-size: 19px;
     font-weight: bold;
-    color: #fafaff;
+    color: $color_text_footer;
     padding-bottom: 10px;
 }
 
 input[type=range] {
-    height: 10px;
+    @include size(100%,10px);
     -webkit-appearance: none;
-    width: 100%;
     border-radius: 8px;
     margin-bottom: 5px;
-    background: #3b7677;
+    background: $range_color;
     transition: background 0.2s ease;
     cursor: pointer;
 }
 
-@media (max-width: 600px) {
-    .playerImg{
+
+.playerImg{
+    @include respond_phone{
         display:none;
     }
 }

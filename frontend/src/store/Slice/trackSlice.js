@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import trackService from "../actions/trackService";
+import authService from '../actions/authServise'
 
 
 // Get user from localStorage
@@ -17,7 +18,7 @@ export const addTrack = createAsyncThunk(
     'music/add',
     async (trackData, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await trackService.addTrack(trackData,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -34,7 +35,7 @@ export const getTracks = createAsyncThunk(
     'music/get',
     async (_,thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user ? thunkAPI.getState().auth.user.token : null;
+            const token = await authService.checkRefresh();
             return await trackService.getTracks(token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -51,7 +52,7 @@ export const delTrack = createAsyncThunk(
     'music/delete',
     async (tracId, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await trackService.deleteTrack(tracId,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -70,7 +71,7 @@ export const updateTrack = createAsyncThunk(
     'music/put',
     async (trackData, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await trackService.updateTrack(trackData,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -87,7 +88,7 @@ export const changeLike = createAsyncThunk(
     'music/onLike',
     async (trackData, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await trackService.changeLike(trackData,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -136,7 +137,7 @@ export const addComment = createAsyncThunk(
     'music/addComment',
     async (commData, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await trackService.addComments(commData,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -177,6 +178,7 @@ export const trackSlice = createSlice({
         })
             .addCase(getTracks.pending,(state)=>{
             state.isLoading = true;
+            state.isSuccess = false;
         })
             .addCase(getTracks.fulfilled,(state,action)=>{
             state.isLoading = false

@@ -1,4 +1,4 @@
-import './userList.css'
+import './userList.scss'
 import {ReactComponent as Up} from "../../../assets/upArrow.svg";
 import {ReactComponent as Pencil} from "../../../assets/pencil.svg";
 

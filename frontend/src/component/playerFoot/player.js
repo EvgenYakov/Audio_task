@@ -1,4 +1,4 @@
-import "./player.css"
+import "./player.scss"
 import Controls from "./controls/controls";
 import {useState, useEffect, useRef, useLayoutEffect} from "react";
 import {useLocation, useNavigate} from "react-router-dom";

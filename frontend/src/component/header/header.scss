@@ -1,0 +1,42 @@
+@import "./../../styles/mixins.scss";
+
+$footer_back:rgba(8,8,8);
+$text_color:white;
+
+.LinkHeader{
+    height: 100vh;
+    @include flex_direction(column);
+    main{
+        @include flex_direction(column);
+        flex-grow: 1;
+    }
+}
+
+nav {
+    @include flex_justis_align(space-between, center);
+    background-color:$footer_back;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 30px;
+    @include respond_phone{
+        justify-content: start;
+        flex-direction: column;
+    }
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    @include respond_phone{
+        flex-direction: column;
+    }
+}
+
+.logo{
+    color: $text_color;
+    padding-top: 2px;
+    text-decoration: underline;
+    margin-right: 20px;
+}

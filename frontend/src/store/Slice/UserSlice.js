@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import userService from "../actions/userService"
+import authService from "../actions/authServise";
 
 const initialState = {
     users: [],
@@ -13,10 +14,9 @@ export const getUsers = createAsyncThunk(
     'user/get',
     async (_,thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await userService.getUsers(token)
         }catch(e) {
-            console.log(e)
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
             const mes =
                 (e.response && e.response.data && e.response.data.message) ||
@@ -31,7 +31,7 @@ export const updateUser = createAsyncThunk(
     'user/put',
     async (userData,thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await userService.updateUser(userData,token)
         }catch(e){
             console.log(e)
@@ -50,7 +50,7 @@ export const addUser = createAsyncThunk(
     'user/post',
     async (userData,thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await userService.addUser(userData,token)
         }catch(e){
             console.log(e)
@@ -68,7 +68,7 @@ export const deleteUser = createAsyncThunk(
     'user/delete',
     async (userId,thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await userService.deleteUser(userId,token)
         }catch(e){
             console.log(e)

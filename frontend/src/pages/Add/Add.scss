@@ -1,0 +1,29 @@
+@import "./../../styles/mixins";
+
+.add{
+    height: 100%;
+    background: linear-gradient(66deg, #e38010, #1535bf);
+    @include flex_justis(center);
+
+    &_form{
+        width: 80%;
+        border: 2px solid white;
+        padding: 20px;
+        @include flex_direction(column)
+    }
+}
+
+.mBodyAdd{
+    @include size(80%,100%);
+    background: rgba(0, 0, 0, 0.40);
+    border: 2px solid rgba(3, 3, 3, 0.43);
+    color: white;
+    @include flex_direction_align(column,center)
+}
+
+.body {
+    width: 80%;
+    @include flex_direction_align(column,center)
+}
+
+

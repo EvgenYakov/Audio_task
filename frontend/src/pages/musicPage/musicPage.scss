@@ -1,0 +1,37 @@
+@import "./../../styles/mixins";
+
+$gradient_for_page: linear-gradient(135deg, #e7cc1e, #a530bf, #5aece7);
+
+.MusicPage{
+    @include flex_justis(center);
+    height: 100%;
+    background: $gradient_for_page;
+}
+
+.big-image {
+    @include size(200px,200px);
+    object-fit: cover;
+    border-radius: 120px;
+    margin: 10px;
+    path{
+        fill: white;
+    }
+}
+
+.big-info {
+    display: flex;
+    flex-direction: row;
+ }
+
+.individualTrack{
+    @include size(75%,100%);
+    border-right: 1px gray;
+    border-right-style: solid;
+}
+
+.commentForm{
+    width: 100%;
+    padding: 0 20px;
+    @include flex_direction_align(column,flex-end);
+}
+

@@ -2,7 +2,7 @@ import {ReactComponent as Plus} from "../../../assets/plus.svg";
 import {ReactComponent as EmptyImg} from "../../../assets/emptyImg.svg";
 import {ReactComponent as Heart} from "../../../assets/heartOff.svg";
 import Accordion from "../../../component/accordion/accordion";
-import './playlist.css'
+import './playlist.scss'
 import {useSelector} from "react-redux";
 import {useState} from "react";
 

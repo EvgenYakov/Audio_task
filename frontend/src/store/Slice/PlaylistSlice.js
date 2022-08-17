@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import {addTrack, trackSlice} from "./trackSlice";
+import {getTracks} from "./trackSlice";
 import playlistService from "../actions/playlistService";
-import {putUser} from "./AuthSlice";
+import authService from "../actions/authServise";
 
 
 
@@ -17,7 +17,7 @@ export const addPlaylist = createAsyncThunk(
     'playlist/add',
     async (playlistData, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await playlistService.addPlaylist(playlistData,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -35,7 +35,8 @@ export const getPlaylist = createAsyncThunk(
     'playlist/get',
     async (playlistData, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
+            thunkAPI.dispatch(getTracks())
             return await playlistService.getPlaylist(token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -52,7 +53,7 @@ export const putPlaylist = createAsyncThunk(
     'playlist/put',
     async (playlistData, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await playlistService.putPlaylist(playlistData,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -69,7 +70,7 @@ export const deletePlaylist = createAsyncThunk(
     'playlist/delete',
     async (playlistId, thunkAPI)=>{
         try{
-            const token = thunkAPI.getState().auth.user.token;
+            const token = await authService.checkRefresh();
             return await playlistService.deletePlaylist(playlistId,token)
         }catch (e) {
             if (e.response.status === 401) return thunkAPI.rejectWithValue(e.response.status)
@@ -93,8 +94,8 @@ export const playlistSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(addPlaylist.fulfilled, (state, action) => {
-                state. isPlstLoading = false
-                state. isPlstSuccess = true
+                state.isPlstLoading = false
+                state.isPlstSuccess = true
                 state.playlists.push(action.payload)
             })
             .addCase(addPlaylist.rejected, (state, action) => {
@@ -103,7 +104,7 @@ export const playlistSlice = createSlice({
                 state.plstMessage = action.payload
             })
             .addCase(getPlaylist.pending, (state) => {
-                state. isPlstLoading = true;
+                state.isPlstLoading = true;
             })
             .addCase(getPlaylist.fulfilled, (state, action) => {
                 state.isPlstLoading = false

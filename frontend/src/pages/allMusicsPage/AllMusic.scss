@@ -1,0 +1,24 @@
+@import "./../../styles/mixins";
+
+$gradient_for_page: linear-gradient(90deg, #af56d5, #a530bf, #5aece7);
+
+.AllMusic{
+    height: 100%;
+    background: $gradient_for_page;
+    @include flex_justis(center)
+}
+
+.listControls{
+    @include flex_justis(space-between)
+}
+
+ul {
+    list-style: none;
+    padding-left: 0rem;
+}
+
+@media (max-width: 600px) {
+    .listControls{
+        @include flex_direction_justis(column,space-between)
+    }
+}

@@ -1,6 +1,6 @@
 
 import {ReactComponent as Music} from "../../assets/music.svg";
-import './TrackList.css'
+import './TrackList.scss'
 import {useLocation, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import ControlsForUser from "./controlsForUser/controlsForUser";
@@ -14,7 +14,6 @@ import {addView} from "../../store/Slice/trackSlice";
 function TrackList(props){
     const location = useLocation()
     const navigate = useNavigate();
-    const tracks= props.tracks ? JSON.parse(JSON.stringify(props.tracks)) : [];
 
 
     const {user} = useSelector(
@@ -23,10 +22,15 @@ function TrackList(props){
         }
     )
 
+    useEffect(()=>{
+        console.log(props.activeTrack)
+        console.log(props.tracks)
+    },[props.activeTrack])
+
     return (
         <ul style={{width:"100%"}}>
             {
-                tracks.map((track,index)=>{
+                props.tracks.map((track,index)=>{
                 return (
                     <li className="track" key={index}>
                         <div className="info">

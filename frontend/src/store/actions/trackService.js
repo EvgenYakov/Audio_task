@@ -1,14 +1,17 @@
 import axios from "axios";
+import authService from "./authServise";
 
 export async function addTrack(trackData,token){
     const uploadRes =  await axios.post('/stream/upload', trackData.data, {
         headers:{
             'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
         }
     })
+    const newToken = await authService.checkRefresh();
     const config = {
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${newToken}`
         },
     }
     const resp =  await axios.post('/music/', {
@@ -17,7 +20,6 @@ export async function addTrack(trackData,token){
         author:trackData.author,
         url:trackData.url
     }, config)
-    console.log(resp.data)
     return resp.data;
 }
 
@@ -27,7 +29,6 @@ export async function getTracks(token){
             Authorization: `Bearer ${token}`,
         },
     }
-
     const response = await axios.get('/music/',config)
     return response.data
 }

@@ -1,4 +1,4 @@
-import './CommentList.css'
+import './CommentList.scss'
 
 export default function CommentList(props){
     const items = [...props.items]

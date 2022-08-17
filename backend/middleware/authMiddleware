@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const asyncHandler = require('express-async-handler')
 const User = require('../models/user')
+const Tokens = require('../models/tokens')
 
 const protect = asyncHandler(async (req,res,next)=>{
     let token;
@@ -8,10 +9,14 @@ const protect = asyncHandler(async (req,res,next)=>{
         try {
             token = req.headers.authorization.split(' ')[1]
             const decoded = jwt.verify(token, process.env.SECRET)
+            const refToken =await Tokens.findOne({userId:decoded.id})
+            if (!refToken){
+                throw new Error()
+            }
             req.user = await User.findById(decoded.id).select('-password')
             next()
         }catch (e) {
-            console.log(e)
+            console.log(e.message)
             res.status(401)
             throw new Error('Вы не авторизованы')
         }
@@ -30,9 +35,12 @@ const protectAdmin = asyncHandler(async (req,res,next)=>{
             token = req.headers.authorization.split(' ')[1]
             const decoded = jwt.verify(token, process.env.SECRET)
             req.user = await User.findById(decoded.id).select('-password')
-
+            const refToken =await Tokens.findOne({userId:decoded.id})
+            if (!refToken){
+                throw new Error()
+            }
         }catch (e) {
-            console.log(e)
+            console.log(e.message)
             res.status(401)
             throw new Error('Вы не авторизованы')
         }
@@ -58,16 +66,25 @@ const protectGuest = asyncHandler(async (req,res,next)=>{
         try {
             token = req.headers.authorization.split(' ')[1]
             if (token==="null") {
+                console.log(1111)
                 res.status(401)
                 req.user = "guest"
                 next()
                 return
             }
             const decoded = jwt.verify(token, process.env.SECRET)
+            const refToken = await Tokens.findOne({userId:decoded.id})
+            console.log(refToken)
+            if (!refToken){
+                res.status(401)
+                req.user = "guest"
+                next()
+                return
+            }
             req.user = await User.findById(decoded.id).select('-password')
             next()
         }catch (e) {
-            console.log(e)
+            console.log(e.message)
             res.status(401)
             throw new Error('Вы не авторизованы')
         }

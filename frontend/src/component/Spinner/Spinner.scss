@@ -1,3 +1,8 @@
+@import "./../../styles/mixins.scss";
+
+$border_style: #ffffff transparent #ffffff transparent;
+$back_shadow:rgba(0, 0, 0, 0.20);
+
 .loadingSpinnerContainer {
     position: fixed;
     top: 0;
@@ -5,20 +10,19 @@
     bottom: 0;
     left: 0;
     z-index: 5000;
-    background: rgba(0, 0, 0, 0.20);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: $back_shadow;
+    @include flex_justis_align(center,center);
 }
 
 .loadingSpinner {
-     width: 64px;
-     height: 64px;
+    @include size(64px,64px);
      border: 8px solid;
-     border-color: #ffffff transparent #ffffff transparent;
+     border-color: $border_style;
      border-radius: 50%;
      animation: spin 1.2s linear infinite;
  }
+
+
 
 @keyframes spin {
     0% {

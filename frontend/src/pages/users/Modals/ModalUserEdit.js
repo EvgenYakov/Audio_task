@@ -1,7 +1,6 @@
 import Cinput from "../../../UI/CInput/Cinput";
-import Cbutton from "../../../UI/CButton/cbutton";
 import {useState,useEffect} from "react";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {deleteUser, updateUser} from "../../../store/Slice/UserSlice";
 import is from "is_js";
 import {toast} from "react-toastify";

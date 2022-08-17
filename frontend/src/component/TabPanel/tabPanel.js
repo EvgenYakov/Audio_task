@@ -1,4 +1,4 @@
-import './tabPanel.css'
+import './tabPanel.scss'
 
 
 export default function TabPanel (props){

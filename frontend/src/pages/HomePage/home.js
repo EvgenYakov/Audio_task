@@ -1,4 +1,4 @@
-import "./home.css"
+import "./home.scss"
 import {useEffect,useState} from "react";
 import Spinner from "../../component/Spinner/Spinner";
 import TrackList from "../../component/tracklist/TrackList";
@@ -7,9 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {addView, getTracks, resetTrack} from "../../store/Slice/trackSlice";
-import {logout} from "../../store/Slice/AuthSlice";
+import {logout, reset} from "../../store/Slice/AuthSlice";
 import {resetPLaylist} from "../../store/Slice/PlaylistSlice";
-
 
 export default function Home(){
     const dispatch = useDispatch()
@@ -25,25 +24,28 @@ export default function Home(){
 
 
 
-    useEffect(() => {
-        if (isError) {
-            toast.error(message)
-            return
-        }
-        dispatch(getTracks())
-    }, [])
+    // useEffect(() => {
+    //     if (isError) {
+    //         toast.error(message)
+    //         return
+    //     }
+    //     dispatch(getTracks())
+    //     return () => {
+    //         dispatch(resetTrack())
+    //     }
+    // }, [])
 
     useEffect(() => {
         if (isError) {
             if (message===401) {
                 toast.error("Время сеанса истекло")
                 dispatch(resetTrack())
+                dispatch(reset())
                 dispatch(resetPLaylist())
                 dispatch(logout())
-                navigate('/auth')
                 return
-            }
-            toast.error(message)
+            } else
+           toast.error(message)
         }
 
         dispatch(getTracks())
@@ -52,6 +54,8 @@ export default function Home(){
             dispatch(resetTrack())
         }
     }, [navigate, isError, message, dispatch])
+
+
 
 
     useEffect(() => {
@@ -122,7 +126,12 @@ export default function Home(){
     }
 
     return (
-        <div className="Home">
+        <div
+            className="Home"
+            initial={{ width: 0}}
+            animate={{ width: "100%" }}
+            exit={{ x: window.innerWidth, transition:{duration:0.2} }}
+        >
             <div className="mBody">
                 <h1>
                     Главная страница

@@ -1,9 +1,7 @@
-
 import Cinput from "../../../../UI/CInput/Cinput";
 import Cbutton from "../../../../UI/CButton/cbutton";
-import './modalAdd.css'
+import './modalAdd.scss'
 import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
 import TrackList from "../../../../component/tracklist/TrackList";
 import {useEffect, useState} from "react";
 import {addPlaylist} from "../../../../store/Slice/PlaylistSlice";
@@ -11,9 +9,8 @@ import {addPlaylist} from "../../../../store/Slice/PlaylistSlice";
 
 export default function ModalAdd(props){
     const dispatch = useDispatch()
-    const navigate = useNavigate();
     const [playlist,setPlaylist] = useState([])
-    const {tracks, isLoading, isError, isSuccess, message } = useSelector(
+    const {tracks} = useSelector(
         (state) => {
             return state.track
         }

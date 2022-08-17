@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import './musicPage.css'
+import './musicPage.scss'
 import Cbutton from "../../UI/CButton/cbutton";
 import CommentList from "./CommentList/CommentList";
 import {useState} from "react";
@@ -8,7 +8,6 @@ import { addComment, resetTrack, getTrack} from "../../store/Slice/trackSlice";
 import {ReactComponent as Music} from "../../assets/music.svg";
 import {useEffect} from "react";
 import {Spinner} from "reactstrap";
-
 export default function MusicPage(props){
     const location = useLocation()
     const navigate = useNavigate()
@@ -32,7 +31,6 @@ export default function MusicPage(props){
     )
 
     useEffect(() => {
-
         dispatch(getTrack(location.pathname.split("/")[2]))
         return () => {
             dispatch(resetTrack())
@@ -62,7 +60,9 @@ export default function MusicPage(props){
     }
 
     return (
-        <div className="MusicPage">
+        <div
+            className="MusicPage"
+        >
             <div className="mBody">
                 <div className="individualTrack">
                     <h1 style={{textAlign:'center'}}>

@@ -1,0 +1,29 @@
+@import "./../../../styles/mixins.scss";
+
+$transparent: rgba(0, 0, 0, 0.0);
+$hover_button: rgba(80, 80, 80, 0.4);
+$fill_svg: white;
+
+.playerControls{
+    @include flex_direction_justis(row,center);
+    margin: 0 20px;
+    svg{
+        @include size(30px,30px);
+    }
+    path {
+        fill: $fill_svg;
+    }
+    button{
+        background-color: $transparent;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover{
+        background-color: $hover_button;
+    }
+}
+
+
+.prev{
+    transform: rotate(180deg);
+}

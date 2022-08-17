@@ -1,0 +1,33 @@
+@import "./../../styles/mixins";
+
+%textAndAlign {
+    align-items: center;
+    text-align: center;
+}
+$back-authPage: linear-gradient(21deg, #dd03e4, #5611ec);
+$back-form: #ffffff;
+
+.Auth{
+    @extend %textAndAlign;
+    padding: 5%;
+    max-width: 100%;
+    height: 100%;
+    background:$back-authPage;
+
+    h1 {
+        color: white;
+    }
+
+    &-form{
+        @include flex_direction_align(column,center);
+        margin: auto;
+        width: 350px;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: $back-form;
+    }
+}
+
+.form-floating label {
+    color: black;
+}

@@ -1,0 +1,53 @@
+@import "./../../styles/mixins.scss";
+
+$back_for_control:  rgba(0, 0, 0, 0.40);
+$transparent: rgba(0, 0, 0, 0.0);
+$fill_svg: white;
+
+.track {
+    @include flex_justis_align(space-between,center);
+    background: $back_for_control;
+    padding: 5px;
+    margin: 3px;
+    border-radius: 2px;
+}
+
+.small-img {
+    @include size(60px,60px);
+    object-fit: cover;
+    border-radius: 120px;
+    margin-right: 5px;
+    path {
+        fill: $fill_svg;
+    }
+}
+
+.info {
+    @include flex_direction(row)
+}
+
+
+.heartOn{
+    svg{
+        @include size(30px,30px)
+    }
+}
+
+.trackControls{
+    path{
+        fill: $fill_svg;
+    }
+    svg{
+        @include size(30px,30px)
+    }
+    button{
+        background-color: $transparent;
+    }
+    button:hover{
+        background-color: $back_for_control;
+    }
+}
+
+
+
+

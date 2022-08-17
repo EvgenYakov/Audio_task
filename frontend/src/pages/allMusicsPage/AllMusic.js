@@ -1,4 +1,4 @@
-import './AllMusic.css'
+import './AllMusic.scss'
 import TrackList from "../../component/tracklist/TrackList";
 import {useEffect, useRef, useState} from "react"
 import Playlist from "./Playlist/playList";
@@ -6,7 +6,7 @@ import Modal from "../../component/modal/modal";
 import ModalAdd from "./modalForms/add/modalAdd";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
-import {logout, putUser} from "../../store/Slice/AuthSlice";
+import {logout, putUser, reset} from "../../store/Slice/AuthSlice";
 import {getTracks,  resetTrack,  addView, changeLike} from "../../store/Slice/trackSlice";
 import {useNavigate} from "react-router-dom";
 import Spinner from "../../component/Spinner/Spinner";
@@ -58,6 +58,7 @@ import ListControl from "../../component/ListControl/ListControl";
                  toast.error("Время сеанса истекло")
                  dispatch(resetTrack())
                  dispatch(resetPLaylist())
+                 dispatch(reset())
                  dispatch(logout())
                  navigate('/auth')
                  return
@@ -68,7 +69,7 @@ import ListControl from "../../component/ListControl/ListControl";
              navigate('/auth')
              return
          }
-         dispatch(getTracks())
+        // dispatch(getTracks())
          dispatch(getPlaylist())
 
          return () => {
@@ -78,10 +79,26 @@ import ListControl from "../../component/ListControl/ListControl";
      }, [navigate, isError, message, dispatch,plstMessage,isPlstError])
 
 
+
+     // useEffect(() => {
+     //     dispatch(getTracks())
+     //     // return () => {
+     //     //     dispatch(resetTrack())
+     //     // }
+     // }, [dispatch])
+
+     // useEffect(() => {
+     //     dispatch(getPlaylist())
+     //     return () => {
+     //         dispatch(resetPLaylist())
+     //         dispatch(resetTrack())
+     //     }
+     // }, [])
+
+
      useEffect(() => {
          if (tracks.length){
              setActiveTracks(JSON.parse(JSON.stringify(tracks)));
-             setActiveTrack(tracks[0]._id)
              setActiveTrack({
                  index:0,
                  fileId:tracks[0].fileId
@@ -191,7 +208,9 @@ import ListControl from "../../component/ListControl/ListControl";
      }
 
     return (
-        <div className="AllMusic">
+        <div
+            className="AllMusic"
+        >
             <div className="mBody">
                <h1>
                    Музыка

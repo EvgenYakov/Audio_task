@@ -1,19 +1,14 @@
-
 import Cinput from "../../../../UI/CInput/Cinput";
-import Cbutton from "../../../../UI/CButton/cbutton";
-import './modalEdit.css'
 import {useDispatch, useSelector} from "react-redux";
-import {useNavigate} from "react-router-dom";
 import TrackList from "../../../../component/tracklist/TrackList";
 import {useEffect, useState} from "react";
-import {addPlaylist, deletePlaylist, putPlaylist} from "../../../../store/Slice/PlaylistSlice";
+import {deletePlaylist, putPlaylist} from "../../../../store/Slice/PlaylistSlice";
 
 
 export default function ModalEdit(props){
 
     const dispatch = useDispatch()
-    const navigate = useNavigate();
-    const {tracks, isLoading, isError, isSuccess, message } = useSelector(
+    const {tracks} = useSelector(
         (state) => {
             return state.track
         }

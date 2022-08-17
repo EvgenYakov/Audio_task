@@ -1,0 +1,15 @@
+@import "./../../styles/mixins.scss";
+
+
+.nav-tabs{
+    @include flex_align(center);
+    width: 330px;
+    margin: auto;
+}
+
+.nav-link {
+    color:white;
+    &:hover{
+        color:white;
+    }
+}

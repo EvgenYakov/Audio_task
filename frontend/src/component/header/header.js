@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import './header.css'
+import './header.scss'
 import RenderLinks from "./Links/RenderLinks";
 import {useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";

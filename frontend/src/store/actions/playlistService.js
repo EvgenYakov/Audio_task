@@ -1,7 +1,4 @@
 import axios from "axios";
-import {toast} from "react-toastify";
-import {Schema} from "mongoose";
-import {addTrack, deleteTrack, getTracks, updateTrack} from "./trackService";
 
 
 export async function addPlaylist(trackData,token){
@@ -24,7 +21,7 @@ export async function getPlaylist(token){
             Authorization: `Bearer ${token}`
         },
     }
-    const resp =  await axios.get('/playlist/', config)
+    const resp =  await axios.get('/playlist/', config);
     return resp.data;
 }
 

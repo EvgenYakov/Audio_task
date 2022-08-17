@@ -1,7 +1,7 @@
 const express = require("express")
-const mongoose = require('mongoose')
 const connectDB = require('./config/db.js')
 const dotenv = require('dotenv').config()
+const cookieParser = require('cookie-parser')
 
 const addRouter = require('./routes/music.js')
 const authRouter = require('./routes/auth.js')
@@ -21,6 +21,7 @@ const app = express();
 
 connectDB();
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json())

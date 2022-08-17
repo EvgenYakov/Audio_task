@@ -1,0 +1,34 @@
+@import "./../../styles/mixins.scss";
+
+$shadow_back: rgba(0,0,0,0.6);
+$back_for_content: white;
+
+.modal{
+    @include size(100vw,100vh);
+    background-color: $shadow_back;
+    position: fixed;
+    top:0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.5s;
+    @include flex_justis(center);
+    &.active{
+        opacity: 1;
+        pointer-events: all;
+    }
+    &_content{
+        @include size(50vw,max-content);
+        padding: 20px;
+        border-radius: 12px;
+        background-color: $back_for_content;
+        transform: scale(0.5);
+        transition: 0.4s all;
+        margin-top: 100px;
+        &.active{
+            transform: scale(1);
+        }
+    }
+}
+
+

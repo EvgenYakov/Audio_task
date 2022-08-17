@@ -1,0 +1,22 @@
+@import "./../../../styles/mixins.scss";
+
+$back_for_control:  rgba(0, 0, 0, 0.40);
+
+%padd_bord {
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.userLi{
+    @extend %padd_bord;
+    background: $back_for_control;
+    @include flex_direction_justis_align(row,space-between,center);
+    margin:5px;
+}
+
+.userInfo{
+    background: $back_for_control;
+    @include flex_direction_align(column, center);
+    @extend %padd_bord;
+    width: max-content;
+}

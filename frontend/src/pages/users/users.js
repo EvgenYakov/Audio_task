@@ -1,4 +1,4 @@
-import './user.css'
+import './user.scss'
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {toast} from "react-toastify";
@@ -16,7 +16,7 @@ import {resetTrack} from "../../store/Slice/trackSlice";
 import {resetPLaylist} from "../../store/Slice/PlaylistSlice";
 
 
-export default function Users(props){
+export default function Users(){
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [modalActive,setModalActive]=useState(false)
@@ -29,7 +29,7 @@ export default function Users(props){
         }
     )
 
-    const {users, isLoading, isError, isSuccess, message } = useSelector(
+    const {users, isLoading, isError, message } = useSelector(
         (state) => {
             return state.user
         }
@@ -82,7 +82,9 @@ export default function Users(props){
     }
 
     return (
-        <div className="userPage">
+        <div
+            className="userPage"
+        >
             <div className="mBody">
                 <h1>
                     Список пользователей

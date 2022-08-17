@@ -37,6 +37,7 @@ const getPlaylist = asyncHandler(async (req,res)=>{
             res.status(200).json(categoryPlaylist)
     }catch (e) {
         res.status(400)
+        console.log(e)
         throw new Error(e)
     }
 

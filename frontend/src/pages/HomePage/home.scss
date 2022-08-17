@@ -1,0 +1,20 @@
+@import "./../../styles/mixins";
+
+$back-homepage: linear-gradient(90deg, #64247F, #BF3A30 , #64247F);
+$back_for_control:  rgba(0, 0, 0, 0.40);
+$border_style:  2px solid rgba(3, 3, 3, 0.43);
+$text_color: white;
+
+.Home{
+  @include flex_justis(center);
+  height: 100%;
+  background: $back-homepage;
+}
+
+.mBody{
+  @include size(80%,100%);
+  margin-bottom: 80px;
+  background: $back_for_control;
+  border: $border_style;
+  color: $text_color;
+}

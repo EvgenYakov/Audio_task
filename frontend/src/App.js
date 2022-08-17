@@ -15,14 +15,14 @@ function App() {
   return (
       <>
           <LinkHeader>
-            <Routes>
-              <Route path="/" element={<Home/>}/>
-              <Route path="/auth" element={<Auth/>}/>
-              <Route path="/add" element={<Add/>}/>
-              <Route path="/music" element={<AllMusic/>}/>
-              <Route path="/users" element={<Users/>}/>
-                <Route path="/music/:id" element={<MusicPage/>}/>
-            </Routes>
+              <Routes>
+                  <Route path="/" element={<Home/>}/>
+                  <Route path="/auth" element={<Auth/>}/>
+                  <Route path="/add" element={<Add/>}/>
+                  <Route path="/music" element={<AllMusic/>}/>
+                  <Route path="/users" element={<Users/>}/>
+                  <Route path="/music/:id" element={<MusicPage/>}/>
+              </Routes>
         </LinkHeader>
           <ToastContainer/>
       </>

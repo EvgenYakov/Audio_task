@@ -1,6 +1,6 @@
 import {React, useState,useEffect} from "react";
 import Cbutton from "../../UI/CButton/cbutton";
-import './auth.css'
+import './auth.scss'
 import TabPanel from "../../component/TabPanel/tabPanel";
 import isValidate from "./funcForValidate/isValidate";
 import {initialStateForFormReg,initialStateForFormLog} from "./funcForValidate/stateForValidate";
@@ -90,7 +90,9 @@ function Auth(){
 
 
     return(
-        <div className='Auth'>
+        <div
+            className='Auth'
+        >
             <h1>Аутентификация</h1>
             <TabPanel activePage = {logHand} onClickOnTab = {setLogHand}/>
             {

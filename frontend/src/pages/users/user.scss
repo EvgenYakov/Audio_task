@@ -1,0 +1,32 @@
+@import "./../../styles/mixins.scss";
+$gradient_for_page: linear-gradient(135deg, #36d4e8, #13ec69, #fddc0c);
+$back_for_control:  rgba(0, 0, 0, 0.40);
+$transparent:  rgba(0, 0, 0, 0.0);
+
+.userPage{
+    @include flex_justis(center);
+    height: 100%;
+    background: $gradient_for_page;
+}
+
+.userControls{
+    svg{
+        @include size(60px,60px)
+    }
+    path{
+        fill: white;
+    }
+    button{
+        background-color: $transparent;
+    }
+    button:hover{
+        background-color: $back_for_control;
+    }
+}
+
+
+.plus{
+    svg{
+        @include size(60px,60px)
+    }
+}

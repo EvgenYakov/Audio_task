@@ -1,5 +1,5 @@
 import {NavLink} from "react-router-dom";
-import './RenderLinks.css'
+import './RenderLinks.scss'
 import {useSelector} from "react-redux";
 
 const linksForAdmin = [

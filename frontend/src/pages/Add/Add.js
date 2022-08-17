@@ -1,4 +1,4 @@
-import './Add.css'
+import './Add.scss'
 import {useState,useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -41,13 +41,18 @@ export default function Add(){
             navigate('/')
         }
 
+        // dispatch(getTracks())
+        // return () => {
+        //     dispatch(resetTrack)
+        // }
+    }, [user, navigate, isError, message,dispatch])
+
+    useEffect(() => {
         dispatch(getTracks())
         return () => {
             dispatch(resetTrack)
         }
-    }, [user, navigate, isError, message,dispatch])
-
-
+    }, [])
 
 
     const addTrackSub = async (e,infoOfTrack,selectAudio)=> {

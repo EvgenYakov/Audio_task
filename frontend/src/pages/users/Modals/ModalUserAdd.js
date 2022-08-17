@@ -5,6 +5,7 @@ import {useDispatch} from "react-redux";
 import {addUser} from "../../../store/Slice/UserSlice";
 import {toast} from "react-toastify";
 import is from "is_js";
+
 export default function ModalUserAdd(props) {
     const dispatch = useDispatch()
     const [formData, setFormData] = useState({
