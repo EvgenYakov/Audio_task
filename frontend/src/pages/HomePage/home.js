@@ -22,19 +22,6 @@ export default function Home(){
         }
     )
 
-
-
-    // useEffect(() => {
-    //     if (isError) {
-    //         toast.error(message)
-    //         return
-    //     }
-    //     dispatch(getTracks())
-    //     return () => {
-    //         dispatch(resetTrack())
-    //     }
-    // }, [])
-
     useEffect(() => {
         if (isError) {
             if (message===401) {
@@ -54,9 +41,6 @@ export default function Home(){
             dispatch(resetTrack())
         }
     }, [navigate, isError, message, dispatch])
-
-
-
 
     useEffect(() => {
         if (tracks.length){
@@ -81,7 +65,6 @@ export default function Home(){
             setActiveTracks(chTracks)
         }
     },[viewAdded])
-
 
     const playTrack= (fileId,index)=>{
         setActiveTrack({
@@ -126,12 +109,7 @@ export default function Home(){
     }
 
     return (
-        <div
-            className="Home"
-            initial={{ width: 0}}
-            animate={{ width: "100%" }}
-            exit={{ x: window.innerWidth, transition:{duration:0.2} }}
-        >
+        <div className="Home">
             <div className="mBody">
                 <h1>
                     Главная страница

@@ -55,7 +55,9 @@ const loginUser = asyncHandler(async (req,res)=>{
                 token:accessToken
             })
         }catch (e) {
-            console.log(e)
+            console.log(e.message)
+            res.status(501)
+            throw new Error("Ошибка сервера")
         }
     } else {
         res.status(400)
@@ -68,8 +70,6 @@ const refresh = asyncHandler(async (req, res)=>{
     const userData = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     const tokenData = await Tokens.findOne({refreshToken})
     if (!userData || !tokenData) {
-        console.log(userData)
-        console.log(tokenData)
         res.status(401)
         throw new Error('Вы не авторизованы')
     }

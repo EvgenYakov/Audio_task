@@ -7,8 +7,9 @@ import {useDispatch, useSelector} from "react-redux";
 import { addComment, resetTrack, getTrack} from "../../store/Slice/trackSlice";
 import {ReactComponent as Music} from "../../assets/music.svg";
 import {useEffect} from "react";
-import {Spinner} from "reactstrap";
-export default function MusicPage(props){
+import Spinner from "../../component/Spinner/Spinner";
+
+export default function MusicPage(){
     const location = useLocation()
     const navigate = useNavigate()
     const [commentValue,setCommentValue]=useState("");
@@ -37,13 +38,11 @@ export default function MusicPage(props){
         }
     }, [navigate, dispatch])
 
-
     useEffect(() => {
         if(isSuccess === true && track){
             setTrackPage(track)
         }
     }, [isSuccess])
-
 
     const addComm = (e)=>{
         e.preventDefault()
@@ -60,9 +59,7 @@ export default function MusicPage(props){
     }
 
     return (
-        <div
-            className="MusicPage"
-        >
+        <div className="MusicPage">
             <div className="mBody">
                 <div className="individualTrack">
                     <h1 style={{textAlign:'center'}}>
@@ -83,7 +80,6 @@ export default function MusicPage(props){
                                 </div>
                             </div>
                     }
-
                     <p className="fs-3 mt-5 ms-2">Комментарии</p>
                     <hr/>
                     {
@@ -102,7 +98,8 @@ export default function MusicPage(props){
                                 </Cbutton>
                             </form>
                     }
-                    {trackPage.comments.items.length !== 0 ?
+                    {
+                        trackPage.comments.items.length !== 0 ?
                         <CommentList items={trackPage.comments.items}/>
                         : <></>
                     }

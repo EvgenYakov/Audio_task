@@ -40,11 +40,9 @@ export default function PlayerFooter({activeTrack,toNextTrack,toPrevTrack}){
         },
     [activeTrack] )
 
-
     useEffect(()=>{
         audioRef.current.removeEventListener("canplay",completeCheck)
     },[navigate])
-
 
      function startTimer(){
          clearInterval(intervalRef.current);
@@ -56,7 +54,6 @@ export default function PlayerFooter({activeTrack,toNextTrack,toPrevTrack}){
              }
          },[1000])
      }
-
 
      useEffect(()=>{
          if (trPlaying){
@@ -105,13 +102,11 @@ export default function PlayerFooter({activeTrack,toNextTrack,toPrevTrack}){
         audioRef.current.removeEventListener("canplay",completeCheck)
     }
 
-
     function onScrub(value){
         clearInterval(intervalRef.current);
         audioRef.current.currentTime = value;
         setTrProgress(audioRef.current.currentTime)
     }
-
 
     function onScrubEnd(){
         if (!trPlaying) {
@@ -119,6 +114,7 @@ export default function PlayerFooter({activeTrack,toNextTrack,toPrevTrack}){
         }
         startTimer();
     }
+
     return(
         <div className="playFoot">
             <input

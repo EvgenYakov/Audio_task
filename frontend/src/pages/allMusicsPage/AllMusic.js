@@ -7,7 +7,7 @@ import ModalAdd from "./modalForms/add/modalAdd";
 import {useDispatch, useSelector} from "react-redux";
 import {toast} from "react-toastify";
 import {logout, putUser, reset} from "../../store/Slice/AuthSlice";
-import {getTracks,  resetTrack,  addView, changeLike} from "../../store/Slice/trackSlice";
+import {resetTrack,  addView, changeLike} from "../../store/Slice/trackSlice";
 import {useNavigate} from "react-router-dom";
 import Spinner from "../../component/Spinner/Spinner";
 import PlayerFooter from "../../component/playerFoot/player";
@@ -69,7 +69,6 @@ import ListControl from "../../component/ListControl/ListControl";
              navigate('/auth')
              return
          }
-        // dispatch(getTracks())
          dispatch(getPlaylist())
 
          return () => {
@@ -77,24 +76,6 @@ import ListControl from "../../component/ListControl/ListControl";
              dispatch(resetPLaylist())
          }
      }, [navigate, isError, message, dispatch,plstMessage,isPlstError])
-
-
-
-     // useEffect(() => {
-     //     dispatch(getTracks())
-     //     // return () => {
-     //     //     dispatch(resetTrack())
-     //     // }
-     // }, [dispatch])
-
-     // useEffect(() => {
-     //     dispatch(getPlaylist())
-     //     return () => {
-     //         dispatch(resetPLaylist())
-     //         dispatch(resetTrack())
-     //     }
-     // }, [])
-
 
      useEffect(() => {
          if (tracks.length){

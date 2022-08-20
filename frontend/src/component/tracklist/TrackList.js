@@ -1,31 +1,22 @@
-
 import {ReactComponent as Music} from "../../assets/music.svg";
 import './TrackList.scss'
 import {useLocation, useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import ControlsForUser from "./controlsForUser/controlsForUser";
 import ControlsForAdmin from "./controlsForAdmin/controlsForAdmin";
 import ControlsForPlaylist from "./controlsForPlaylist/controlsForPlaylist";
 import {ReactComponent as Play} from "../../assets/play.svg";
 import {ReactComponent as Page} from "../../assets/audio.svg";
-import {useEffect, useState} from "react";
-import {addView} from "../../store/Slice/trackSlice";
 
 function TrackList(props){
     const location = useLocation()
     const navigate = useNavigate();
-
 
     const {user} = useSelector(
         (state) => {
             return state.auth
         }
     )
-
-    useEffect(()=>{
-        console.log(props.activeTrack)
-        console.log(props.tracks)
-    },[props.activeTrack])
 
     return (
         <ul style={{width:"100%"}}>

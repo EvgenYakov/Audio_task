@@ -12,6 +12,7 @@ $back_for_control:  rgba(0, 0, 0, 0.40);
     background: $back_for_control;
     @include flex_direction_justis_align(row,space-between,center);
     margin:5px;
+    animation: advent 0.5s linear 1 alternate;
 }
 
 .userInfo{

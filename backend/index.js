@@ -16,9 +16,6 @@ const PORT = process.env.PORT || 3001
 const app = express();
 
 
-
-//app.use(multer({dest:"uploads"}).single("filedata"));
-
 connectDB();
 
 app.use(cookieParser());
@@ -26,13 +23,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
-//app.use('/music',addRouter);
 app.use('/auth',authRouter);
 app.use('/music',addRouter);
 app.use('/playlist',playlistRouter)
 app.use('/user',userRouter);
 app.use('/stream',streamRouter);
-
 
 
 app.use(errorHandler)

@@ -39,9 +39,6 @@ function Auth(){
         dispatch(reset())
     }, [user, isError, navigate,isSuccess, message, dispatch])
 
-
-
-
     function onChangeHand(e,contName){
         const formControls = {...regForm.formControls};
         const control = {...formControls[contName]};
@@ -88,7 +85,6 @@ function Auth(){
         dispatch(login(userData))
     }
 
-
     return(
         <div
             className='Auth'
@@ -111,7 +107,6 @@ function Auth(){
                     </form>
                 )
             }
-
         </div>
 )
 }

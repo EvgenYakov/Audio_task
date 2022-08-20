@@ -47,3 +47,12 @@
   width: $width;
   height: $height;
 }
+
+@keyframes advent {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

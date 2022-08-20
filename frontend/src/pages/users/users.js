@@ -60,16 +60,12 @@ export default function Users(){
         }
     }, [navigate, isError, message, dispatch])
 
-
-
-
     const userUp = (id)=>{
         const newUser = {...users.find(user=>user._id===id)}
         newUser.role="admin";
         dispatch(deleteAdminUser(newUser._id))
         dispatch(updateUser(newUser))
     }
-
 
     const openAddModal = ()=>{
         modalEdit.current = null;
@@ -82,9 +78,7 @@ export default function Users(){
     }
 
     return (
-        <div
-            className="userPage"
-        >
+        <div className="userPage">
             <div className="mBody">
                 <h1>
                     Список пользователей
@@ -110,7 +104,8 @@ export default function Users(){
 
             </div>
             <Modal active={modalActive} setActive={setModalActive}>
-                {modalEdit.current ?
+                {
+                    modalEdit.current ?
                     <ModalUserEdit setActive={setModalActive} active={modalActive} user = {modalEdit.current}/>:
                     <ModalUserAdd setActive={setModalActive} active={modalActive}/>
                 }

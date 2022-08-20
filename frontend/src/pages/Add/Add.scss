@@ -22,8 +22,8 @@
 }
 
 .body {
+    @include flex_direction_align(column,center);
     width: 80%;
-    @include flex_direction_align(column,center)
 }
 
 

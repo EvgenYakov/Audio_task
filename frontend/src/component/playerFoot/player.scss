@@ -15,6 +15,7 @@ $range_color: #3b7677;
     font-weight: bold;
     color: $color_text_footer;
     padding-bottom: 10px;
+    animation: advent 0.5s linear 1 alternate;
 }
 
 input[type=range] {
@@ -26,7 +27,6 @@ input[type=range] {
     transition: background 0.2s ease;
     cursor: pointer;
 }
-
 
 .playerImg{
     @include respond_phone{
