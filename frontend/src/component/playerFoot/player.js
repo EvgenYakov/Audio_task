@@ -41,6 +41,7 @@ export default function PlayerFooter({activeTrack,toNextTrack,toPrevTrack}){
     [activeTrack] )
 
     useEffect(()=>{
+        isReady.current=false;
         audioRef.current.removeEventListener("canplay",completeCheck)
     },[navigate])
 
